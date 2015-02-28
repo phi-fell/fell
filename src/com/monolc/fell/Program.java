@@ -30,9 +30,12 @@ public class Program {
 		if (glfwInit() != GL11.GL_TRUE) {
 			throw new IllegalStateException("Unable to initialize GLFW");
 		}
-		Window w = new Window(800, 600, "Trolling around... The Christmas tree.");
+		Window w2 = new Window(100,10,"",true,false,true,false);
+		w2.setPosition(10, 10);
+		Window w = new Window(800, 600, "Alyssa is a dumb.");
 		while (w.shouldClose()){
 			w.update();
+			w2.update();
 		}
 		w.destroy();
 		glfwTerminate();
