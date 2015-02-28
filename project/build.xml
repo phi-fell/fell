@@ -56,9 +56,12 @@
 	<target name="git">
 		<delete dir="${git.dir}" />
 		<mkdir dir="${git.dir}" />
+		<mkdir dir = "${git.dir}/src" />
 		<copy todir="${git.dir}">
-			<fileset dir="${src.dir}" includes="**" />
 			<fileset file="build.xml" />
+		</copy>
+		<copy todir="${git.dir}/src">
+			<fileset dir="${src.dir}" includes="**" />
 		</copy>
 	</target>
 	<target name="main" depends="compile, jar, docs, git, run">
