@@ -5,6 +5,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GLContext;
 
+import com.monolc.fell.graphics.Graphics;
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryUtil.NULL;
@@ -12,6 +14,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Window {
 	long id;
 	KeyHandler kh;
+	Graphics graphics;
 	public Window(int w, int h, String t, int GLMaj, int GLMin) {
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
@@ -26,6 +29,7 @@ public class Window {
 		}
 		this.bindKeyCallback();
 		this.createContext();
+		graphics = new Graphics(this);
 	}
 	public Window(int w, int h, String t, int GLMaj, int GLMin, boolean visible, boolean resizable, boolean floating, boolean decorated) {
 		glfwDefaultWindowHints();
@@ -43,6 +47,10 @@ public class Window {
 		}
 		this.bindKeyCallback();
 		this.createContext();
+		graphics = new Graphics(this);
+	}
+	public Graphics getGraphics() {
+		return graphics;
 	}
 	public void bindKeyCallback() {
 		kh = new KeyHandler(this);
