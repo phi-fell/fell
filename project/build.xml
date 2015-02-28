@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Fell" default="main" basedir=".">
+<project name="Fell" default="debug" basedir=".">
 	<property name="git.dir" location="C:/github/fell/project" />
 	<property name="src.dir" location="src" />
 	<property name="build.dir" location="bin" />
@@ -25,10 +25,19 @@
 	<target name="compile" depends="clean, makedir">
 		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" />
 	</target>
+	<target name="compiledebug" depends="clean, makedir">
+		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true" />
+	</target>
 	<target name="jar" depends="compile">
 		<copy todir="${build.dir}/com/monolc/fell/version">
 			<fileset file="${src.dir}/com/monolc/fell/version/version" />
 			<fileset file="${src.dir}/com/monolc/fell/version/buildnumber" />
+		</copy>
+		<copy todir="${build.dir}/com/monolc/fell/resources">
+			<fileset file="${src.dir}/com/monolc/fell/resources/res" />
+		</copy>
+		<copy todir="${build.dir}/com/monolc/fell/resources/res">
+			<fileset dir="${src.dir}/com/monolc/fell/resources/res" includes="**" />
 		</copy>
 		<jar destfile="${dist.dir}\fell.jar" basedir="${build.dir}">
 			<manifest>
@@ -56,7 +65,11 @@
 			<fileset dir="${src.dir}" includes="**" />
 		</copy>
 	</target>
-	<target name="main" depends="compile, jar, git, run">
+	<target name="debug" depends="compiledebug, jar, git, run">
+		<description>Main target</description>
+		<buildnumber file="src/com/monolc/fell/version/buildnumber" />
+	</target>
+	<target name="publish" depends="compile, jar, git, run">
 		<description>Main target</description>
 		<buildnumber file="src/com/monolc/fell/version/buildnumber" />
 	</target>
