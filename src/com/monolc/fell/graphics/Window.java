@@ -1,19 +1,8 @@
 package com.monolc.fell.graphics;
 
-import org.lwjgl.Sys;
-import org.lwjgl.glfw.Callbacks;
-import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.glfw.GLFW;
-import org.lwjgl.opengl.GL11;
 
-import java.nio.ByteBuffer;
-import java.nio.IntBuffer;
-import org.lwjgl.BufferUtils;
-import org.lwjgl.glfw.Callbacks;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.glfw.GLFWKeyCallback;
 import org.lwjgl.opengl.GLContext;
-import org.lwjgl.glfw.GLFWvidmode;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -22,6 +11,7 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Window {
 	long id;
 	KeyHandler kh;
+
 	public Window(int w, int h, String t) {
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
@@ -35,7 +25,8 @@ public class Window {
 		glfwMakeContextCurrent(id);
 		GLContext.createFromCurrent();
 	}
-	public Window(int w, int h, String t, boolean visible, boolean resizable, boolean floating, boolean decorated){
+
+	public Window(int w, int h, String t, boolean visible, boolean resizable, boolean floating, boolean decorated) {
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, visible ? GL_TRUE : GL_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, resizable ? GL_TRUE : GL_FALSE);
@@ -50,9 +41,11 @@ public class Window {
 		glfwMakeContextCurrent(id);
 		GLContext.createFromCurrent();
 	}
-	public void setPosition(int x, int y){
+
+	public void setPosition(int x, int y) {
 		GLFW.glfwSetWindowPos(id, x, y);
 	}
+
 	public void keyPress(int key, int scancode, int action, int mods) {
 		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 			glfwSetWindowShouldClose(id, GL_TRUE);
@@ -62,14 +55,17 @@ public class Window {
 			}
 		}
 	}
+
 	public boolean shouldClose() {
 		return GLFW.glfwWindowShouldClose(id) != GL_TRUE;
 	}
+
 	public void update() {
 		double time = glfwGetTime();
 		glfwSwapBuffers(id);
 		glfwPollEvents();
 	}
+
 	public void destroy() {
 		glfwDestroyWindow(id);
 		kh.release();
