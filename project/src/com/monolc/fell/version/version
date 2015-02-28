@@ -1,28 +1,2 @@
-0.0.1
+0.1.0
 Prototype
-//first number is major version:
-//    This is incremented when there has been a significant change in the functionality,
-//    whether in gameplay, optimization, or otherwise.
-//second number is minor version:
-//    This is incremented when any non-insignificant change has occurred.
-//    obviously this should not be incremented when ANY change occurs, however
-//    it should be incremented if the change is in any way noticeable to the user
-//    ^ this includes optimizations that speed it up by a non-negligible amount.
-//    ^ also changes in file formats, etc.
-//third number is revision:
-//    This is incremented when any part of the code is changed and the code is released.
-//    eg.  increment on every commit, or something similar.
-//The second line is the "stage"
-//    This is to help keep track of what features and bugs should be focused on.
-//    Prototype: Game is nigh-unplayable
-//    Pre-Alpha:  Game is arguably a game, but may be very buggy, and missing many features
-//    Alpha: Game should be somewhat fun, although many bugs may be present and some features missing.
-//    Beta:  Very few major bugs, most bugs are trivial, vast majority of features are in place.
-//    Release:  no major bugs, VERY VERY VERY few minor bugs, All (or very nearly all) features in place
-//    NOTE:  features may be added post-release, but these should not be features integral to the game.
-//        ^ The game should be completely playable with all *initially intended* features in place
-//        (so even if many features are added post-release, they were not required for basic gameplay)
-//
-//
-//
-//WHEN INCREMENTING VERSION: increment the number desired, set all numbers to the right of it to 0, delete the file "buildnumber"

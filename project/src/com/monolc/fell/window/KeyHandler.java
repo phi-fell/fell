@@ -1,4 +1,4 @@
-package com.monolc.fell.graphics;
+package com.monolc.fell.window;
 
 import org.lwjgl.glfw.GLFWKeyCallback;
 

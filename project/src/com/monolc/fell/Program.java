@@ -9,13 +9,15 @@ import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL11;
 
-import com.monolc.fell.graphics.Window;
 import com.monolc.fell.version.VersionData;
+import com.monolc.fell.window.Window;
 
 
 public class Program {
 	public static void main(String[] args) {
+		System.out.println("Running...");
 		VersionData v = new VersionData();
+		System.out.println( "Fell " + v.getStage() + " V" + v.getVersion() + ", Build#" + v.getBuild());
 		System.out.println("LWJGL Version " + Sys.getVersion() + " is working.");
 		GLFWErrorCallback errorCallback = Callbacks.errorCallbackPrint(System.err);
 		glfwSetErrorCallback(errorCallback);

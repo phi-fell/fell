@@ -1,4 +1,4 @@
-package com.monolc.fell.graphics;
+package com.monolc.fell.window;
 
 import org.lwjgl.glfw.GLFW;
 
@@ -16,6 +16,10 @@ public class Window {
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		id = glfwCreateWindow(w, h, t, NULL, NULL);
 		if (id == NULL) {
 			throw new RuntimeException("Failed to create the GLFW window");
@@ -32,6 +36,10 @@ public class Window {
 		glfwWindowHint(GLFW_RESIZABLE, resizable ? GL_TRUE : GL_FALSE);
 		glfwWindowHint(GLFW_FLOATING, floating ? GL_TRUE : GL_FALSE);
 		glfwWindowHint(GLFW_DECORATED, decorated ? GL_TRUE : GL_FALSE);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 2);
+		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 		id = glfwCreateWindow(w, h, t, NULL, NULL);
 		if (id == NULL) {
 			throw new RuntimeException("Failed to create the GLFW window");
