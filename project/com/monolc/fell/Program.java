@@ -24,7 +24,7 @@ public class Program {
 		}
 		Window w2 = new Window(100, 10, "", true, false, true, false);
 		w2.setPosition(10, 10);
-		Window w = new Window(800, 600, "Fell  V" + v.getVersion() + ", Build#" + v.getBuild());
+		Window w = new Window(800, 600, "Fell " + v.getStage() + " V" + v.getVersion() + ", Build#" + v.getBuild());
 		while (w.shouldClose()) {
 			w.update();
 			w2.update();
