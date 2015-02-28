@@ -1,4 +1,4 @@
-0.0.0
+0.0.1
 Prototype
 //first number is major version:
 //    This is incremented when there has been a significant change in the functionality,
@@ -21,4 +21,8 @@ Prototype
 //    Release:  no major bugs, VERY VERY VERY few minor bugs, All (or very nearly all) features in place
 //    NOTE:  features may be added post-release, but these should not be features integral to the game.
 //        ^ The game should be completely playable with all *initially intended* features in place
-//        (so even if many features are added post-release, they were not integral to basic gameplay)
+//        (so even if many features are added post-release, they were not required for basic gameplay)
+//
+//
+//
+//WHEN INCREMENTING VERSION: increment the number desired, set all numbers to the right of it to 0, delete the file "buildnumber"
