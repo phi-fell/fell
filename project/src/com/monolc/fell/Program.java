@@ -28,7 +28,7 @@ public class Program {
 			throw new IllegalStateException("Unable to initialize GLFW");
 		}
 		int GLMajor = 4;
-		int GLMinor = 2;
+		int GLMinor = 1;
 		Window w = new Window(800, 600, "Fell " + v.getStage() + " V" + v.getVersion() + ", Build#" + v.getBuild() + " OpenGL V" + GLMajor + "." + GLMinor, GLMajor, GLMinor);
 		VAO vao = new VAO();
 		vao.bind();
