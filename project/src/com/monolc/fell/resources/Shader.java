@@ -34,4 +34,14 @@ public class Shader {
 	public void bind(){
 		GL20.glUseProgram(id);
 	}
+	public void setUniformi(String name, int value){
+		bind();
+		int pos = GL20.glGetUniformLocation(id, name);
+	    GL20.glUniform1i(pos, value);
+	}
+	public void setUniformf(String name, float value){
+		bind();
+		int pos = GL20.glGetUniformLocation(id, name);
+	    GL20.glUniform1f(pos, value);
+	}
 }

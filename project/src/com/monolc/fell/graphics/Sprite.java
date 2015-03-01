@@ -19,15 +19,18 @@ public class Sprite {
 		height = h;
 		vao = new VAO();
 		vao.bind();
-		FloatBuffer vertices = BufferUtils.createFloatBuffer(3 * 6);
-		vertices.put(-0.6f).put(-0.4f).put(0f).put(1f).put(0f).put(0f);
-		vertices.put(0.6f).put(-0.4f).put(0f).put(0f).put(1f).put(0f);
-		vertices.put(0f).put(0.6f).put(0f).put(0f).put(0f).put(1f);
+		FloatBuffer vertices = BufferUtils.createFloatBuffer(6 * 5);
+		vertices.put(0).put(-0).put(1f).put(0f).put(0f);
+		vertices.put(width).put(0).put(0f).put(1f).put(0f);
+		vertices.put(width).put(height).put(0f).put(0f).put(1f);
+		vertices.put(0).put(-0).put(1f).put(0f).put(0f);
+		vertices.put(width).put(height).put(0f).put(0f).put(1f);
+		vertices.put(0).put(height).put(1f).put(1f).put(0f);
 		vbo = new VBO(vertices);
 		vbo.bind();
 	}
 	public void draw() {
 		vao.bind();
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 3);
+		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
 	}
 }

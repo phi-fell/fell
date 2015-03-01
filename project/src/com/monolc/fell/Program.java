@@ -8,6 +8,7 @@ import org.lwjgl.Sys;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL20;
 
 import com.monolc.fell.graphics.*;
 import com.monolc.fell.resources.ResourceHandler;
@@ -30,9 +31,14 @@ public class Program {
 		int GLMajor = 4;
 		int GLMinor = 1;
 		Window w = new Window(800, 600, "Fell " + v.getStage() + " V" + v.getVersion() + ", Build#" + v.getBuild() + " OpenGL V" + GLMajor + "." + GLMinor, GLMajor, GLMinor);
-		Sprite sprite = new Sprite(null, 10, 10);
+		Sprite sprite = new Sprite(null, 200, 200);
 		Shader s = res.loadShader("default");
 		s.bind();
+		s.setUniformi("width", 800);
+		s.setUniformi("height", 600);
+		s.setUniformf("z", 0.0f);
+		s.setUniformf("x", 20);
+		s.setUniformf("y", 20);
 		while (w.shouldClose()) {
 			w.update();
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
