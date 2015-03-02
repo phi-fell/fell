@@ -21,6 +21,9 @@
 	<target name="makedir">
 		<mkdir dir="${build.dir}" />
 		<mkdir dir="${dist.dir}" />
+		<copy todir="${build.dir}">
+			<fileset dir="${lib.dir}/unpacked" includes="**" />
+		</copy>
 	</target>
 	<target name="compile" depends="clean, makedir">
 		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" />

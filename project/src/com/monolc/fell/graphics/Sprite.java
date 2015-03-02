@@ -19,13 +19,13 @@ public class Sprite {
 		height = h;
 		vao = new VAO();
 		vao.bind();
-		FloatBuffer vertices = BufferUtils.createFloatBuffer(6 * 5);
-		vertices.put(0).put(-0).put(1f).put(0f).put(0f);
-		vertices.put(width).put(0).put(0f).put(1f).put(0f);
-		vertices.put(width).put(height).put(0f).put(0f).put(1f);
-		vertices.put(0).put(-0).put(1f).put(0f).put(0f);
-		vertices.put(width).put(height).put(0f).put(0f).put(1f);
-		vertices.put(0).put(height).put(1f).put(1f).put(0f);
+		FloatBuffer vertices = BufferUtils.createFloatBuffer(6 * 7);
+		vertices.put(0).put(0).put(1f).put(1f).put(1f).put(0f).put(0f);
+		vertices.put(width).put(0).put(1f).put(1f).put(1f).put(1f).put(0f);
+		vertices.put(width).put(height).put(1f).put(1f).put(1f).put(1f).put(1f);
+		vertices.put(0).put(0).put(1f).put(1f).put(1f).put(0f).put(0f);
+		vertices.put(width).put(height).put(1f).put(1f).put(1f).put(1f).put(1f);
+		vertices.put(0).put(height).put(1f).put(1f).put(1f).put(0f).put(1f);
 		vbo = new VBO(vertices);
 		vbo.bind();
 	}

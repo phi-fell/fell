@@ -13,8 +13,10 @@ import org.lwjgl.opengl.GL20;
 import com.monolc.fell.graphics.*;
 import com.monolc.fell.resources.ResourceHandler;
 import com.monolc.fell.resources.Shader;
+import com.monolc.fell.resources.Texture;
 import com.monolc.fell.version.*;
 import com.monolc.fell.window.*;
+import com.monolc.fell.world.Floor;
 
 public class Program {
 	public static void main(String[] args) {
@@ -31,7 +33,6 @@ public class Program {
 		int GLMajor = 4;
 		int GLMinor = 1;
 		Window w = new Window(800, 600, "Fell " + v.getStage() + " V" + v.getVersion() + ", Build#" + v.getBuild() + " OpenGL V" + GLMajor + "." + GLMinor, GLMajor, GLMinor);
-		Sprite sprite = new Sprite(null, 200, 200);
 		Shader s = res.loadShader("default");
 		s.bind();
 		s.setUniformi("width", 800);
@@ -39,10 +40,11 @@ public class Program {
 		s.setUniformf("z", 0.0f);
 		s.setUniformf("x", 20);
 		s.setUniformf("y", 20);
+		Floor floor = new Floor(res.loadTexture("tiles"), 160, 160);
 		while (w.shouldClose()) {
 			w.update();
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-			sprite.draw();
+			floor.draw();
 		}
 		w.destroy();
 		glfwTerminate();
