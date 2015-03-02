@@ -1,11 +1,11 @@
 package com.monolc.fell.resources;
 
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
@@ -13,7 +13,11 @@ import javax.imageio.ImageIO;
 import org.lwjgl.BufferUtils;
 
 public class ResourceHandler {
+	Map<String, Shader> shaders;
+	Map<String, Texture> textures;
 	public ResourceHandler() {
+		shaders = new HashMap<String,Shader>();
+		textures = new HashMap<String,Texture>();
 	}
 	public String load(String name) {
 		String ret = "";
@@ -27,10 +31,22 @@ public class ResourceHandler {
 		file.close();
 		return ret;
 	}
-	public Shader loadShader(String name) {
+	public Shader getShader(String name){
+		if(shaders.get(name) == null){
+			shaders.put(name, loadShader(name));
+		}
+		return shaders.get(name);
+	}
+	public Texture getTexture(String name){
+		if(textures.get(name) == null){
+			textures.put(name, loadTexture(name));
+		}
+		return textures.get(name);
+	}
+	private Shader loadShader(String name) {
 		return new Shader(load("res/shader/" + name + "_vertex.glsl"), load("res/shader/" + name + "_fragment.glsl"));
 	}
-	public Texture loadTexture(String name) {
+	private Texture loadTexture(String name) {
 		InputStream in = this.getClass().getResourceAsStream("res/texture/" + name + ".png");
 		BufferedImage image = null;
 		try {

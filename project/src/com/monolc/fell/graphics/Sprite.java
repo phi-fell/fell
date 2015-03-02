@@ -5,6 +5,7 @@ import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
+import com.monolc.fell.resources.Shader;
 import com.monolc.fell.resources.Texture;
 
 public class Sprite {
@@ -29,7 +30,9 @@ public class Sprite {
 		vbo = new VBO(vertices);
 		vbo.bind();
 	}
-	public void draw() {
+	public void draw(Shader s) {
+		s.setUniformf("z", 0.9f);
+		texture.bind();
 		vao.bind();
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
 	}

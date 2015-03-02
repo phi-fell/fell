@@ -11,4 +11,7 @@ public class VAO {
 	public void bind() {
 		GL30.glBindVertexArray(id);
 	}
+	public void delete(){
+		GL30.glDeleteVertexArrays(id);
+	}
 }

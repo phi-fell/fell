@@ -1,11 +1,11 @@
 package com.monolc.fell.window;
 
+import java.util.ArrayList;
+
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL30;
 import org.lwjgl.opengl.GLContext;
-
-import com.monolc.fell.graphics.Graphics;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
@@ -14,8 +14,9 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Window {
 	long id;
 	KeyHandler kh;
-	Graphics graphics;
+	ArrayList<Event> events;
 	public Window(int w, int h, String t, int GLMaj, int GLMin) {
+		events = new ArrayList<Event>();
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
@@ -29,9 +30,9 @@ public class Window {
 		}
 		this.bindKeyCallback();
 		this.createContext();
-		graphics = new Graphics(this);
 	}
 	public Window(int w, int h, String t, int GLMaj, int GLMin, boolean visible, boolean resizable, boolean floating, boolean decorated) {
+		events = new ArrayList<Event>();
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, visible ? GL_TRUE : GL_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, resizable ? GL_TRUE : GL_FALSE);
@@ -47,10 +48,12 @@ public class Window {
 		}
 		this.bindKeyCallback();
 		this.createContext();
-		graphics = new Graphics(this);
 	}
-	public Graphics getGraphics() {
-		return graphics;
+	public Event queryEvent(){
+		return events.remove(0);
+	}
+	public boolean eventsToQuery(){
+		return events.size() > 0;
 	}
 	public void bindKeyCallback() {
 		kh = new KeyHandler(this);
@@ -69,7 +72,7 @@ public class Window {
 			glfwSetWindowShouldClose(id, GL_TRUE);
 		} else {
 			if (action == GLFW_PRESS) {
-				System.out.println("Key #" + key + " was pressed");
+				events.add(new Event(key, action));
 			}
 		}
 	}

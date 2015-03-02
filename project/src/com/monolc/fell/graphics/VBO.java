@@ -2,7 +2,6 @@ package com.monolc.fell.graphics;
 
 import java.nio.FloatBuffer;
 
-import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.*;
 
 public class VBO {
@@ -22,5 +21,8 @@ public class VBO {
 	}
 	public void bind() {
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, id);
+	}
+	public void delete(){
+		GL15.glDeleteBuffers(id);
 	}
 }
