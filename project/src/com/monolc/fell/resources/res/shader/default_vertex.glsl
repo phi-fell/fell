@@ -12,9 +12,11 @@ uniform int height;
 uniform float z;
 uniform float x;
 uniform float y;
+uniform float camx;
+uniform float camy;
 
 void main() {
     vertexColor = color;
     textureCoord = texcoord;
-    gl_Position = vec4(((position + vec2(x,y)) / (vec2(width,height) / 2.0)), z, 1.0);
+    gl_Position = vec4(((position + vec2(x,y) - vec2(camx,camy)) / (vec2(width,height) / 2.0)), z, 1.0);
 }

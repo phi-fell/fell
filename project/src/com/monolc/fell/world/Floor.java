@@ -33,7 +33,7 @@ public class Floor {
 		entityList = new ArrayList<Entity>();
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				tiles[i][j] = new Tile((i + (j * 10)) % 4);
+				tiles[i][j] = new Tile((i==0||j==0||i==width-1||j==height-1)?1:0);
 			}
 		}
 		//entities[5][7] = new Entity(null);

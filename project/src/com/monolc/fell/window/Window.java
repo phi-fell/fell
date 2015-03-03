@@ -1,5 +1,6 @@
 package com.monolc.fell.window;
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 
 import org.lwjgl.glfw.GLFW;
@@ -49,10 +50,10 @@ public class Window {
 		this.bindKeyCallback();
 		this.createContext();
 	}
-	public Event queryEvent(){
+	public Event queryEvent() {
 		return events.remove(0);
 	}
-	public boolean eventsToQuery(){
+	public boolean eventsToQuery() {
 		return events.size() > 0;
 	}
 	public void bindKeyCallback() {
@@ -63,6 +64,18 @@ public class Window {
 		glfwMakeContextCurrent(id);
 		GLContext.createFromCurrent();
 		System.out.println("OpenGL V" + GL11.glGetInteger(GL30.GL_MAJOR_VERSION) + "." + GL11.glGetInteger(GL30.GL_MINOR_VERSION) + " Initialized");
+	}
+	public int getWidth() {
+		IntBuffer width = IntBuffer.allocate(1);
+		IntBuffer height = IntBuffer.allocate(1);
+		GLFW.glfwGetWindowSize(id, width, height);
+		return width.get();
+	}
+	public int getHeight() {
+		IntBuffer width = IntBuffer.allocate(1);
+		IntBuffer height = IntBuffer.allocate(1);
+		GLFW.glfwGetWindowSize(id, width, height);
+		return height.get();
 	}
 	public void setPosition(int x, int y) {
 		GLFW.glfwSetWindowPos(id, x, y);

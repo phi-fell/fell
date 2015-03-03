@@ -38,7 +38,7 @@ public class Program {
 		res.getShader("default").bind();
 		res.getShader("default").setUniformi("width", 800);
 		res.getShader("default").setUniformi("height", 600);
-		Floor floor = new Floor(res.getTexture("tiles"), 10, 10);
+		Floor floor = new Floor(res.getTexture("tiles"), 12, 10);
 		Player plr = new Player(res.getSprite("player"), new Location(floor, 0, 0));
 		while (w.shouldClose()) {
 			w.update();
