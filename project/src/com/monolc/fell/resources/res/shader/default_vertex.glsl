@@ -16,5 +16,5 @@ uniform float y;
 void main() {
     vertexColor = color;
     textureCoord = texcoord;
-    gl_Position = vec4(((position + vec2(x,y)) / (vec2(width,-height) / 2.0)) - vec2(1.0, -1.0), z, 1.0);
+    gl_Position = vec4(((position + vec2(x,y)) / (vec2(width,height) / 2.0)), z, 1.0);
 }

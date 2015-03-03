@@ -19,7 +19,7 @@ public class Floor {
 	VBO vbo;
 	Tile[][] tiles;
 	Entity[][] entities;
-	ArrayList<Entity> entityList;//note that entities and entityList include the same entities, but in different formats
+	ArrayList<Entity> entityList;
 	int width;
 	int height;
 	public Floor(Texture tex, int w, int h) {
@@ -30,11 +30,13 @@ public class Floor {
 		height = h;
 		tiles = new Tile[width][height];
 		entities = new Entity[width][height];
+		entityList = new ArrayList<Entity>();
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				tiles[i][j] = new Tile((i + (j*10)) % 4);
+				tiles[i][j] = new Tile((i + (j * 10)) % 4);
 			}
 		}
+		//entities[5][7] = new Entity(null);
 		generateModel();
 	}
 	public void generateModel() {
@@ -53,12 +55,12 @@ public class Floor {
 		vbo.bind();
 	}
 	private void addTile(int id, int x, int y, FloatBuffer verts) {
-		verts.put(x).put(y).put(1f).put(1f).put(1f).put((id % 10) / 10.0f).put(((int) (id / 10)) / 10.0f);
-		verts.put(x + Tile.TILE_SIZE).put(y).put(1f).put(1f).put(1f).put(((id % 10) + 1) / 10.0f).put(((int) (id / 10)) / 10.0f);
-		verts.put(x + Tile.TILE_SIZE).put(y + Tile.TILE_SIZE).put(1f).put(1f).put(1f).put(((id % 10) + 1) / 10.0f).put((((int) (id / 10)) + 1) / 10.0f);
-		verts.put(x).put(y).put(1f).put(1f).put(1f).put((id % 10) / 10.0f).put(((int) (id / 10)) / 10.0f);
-		verts.put(x + Tile.TILE_SIZE).put(y + Tile.TILE_SIZE).put(1f).put(1f).put(1f).put(((id % 10) + 1) / 10.0f).put((((int) (id / 10)) + 1) / 10.0f);
-		verts.put(x).put(y + Tile.TILE_SIZE).put(1f).put(1f).put(1f).put((id % 10) / 10.0f).put((((int) (id / 10)) + 1) / 10.0f);
+		verts.put(x).put(y).put(1f).put(1f).put(1f).put((id % 10) / 10.0f).put((((int) (id / 10)) + 1) / 10.0f);
+		verts.put(x + Tile.TILE_SIZE).put(y).put(1f).put(1f).put(1f).put(((id % 10) + 1) / 10.0f).put((((int) (id / 10)) + 1) / 10.0f);
+		verts.put(x + Tile.TILE_SIZE).put(y + Tile.TILE_SIZE).put(1f).put(1f).put(1f).put(((id % 10) + 1) / 10.0f).put(((int) (id / 10)) / 10.0f);
+		verts.put(x).put(y).put(1f).put(1f).put(1f).put((id % 10) / 10.0f).put((((int) (id / 10)) + 1) / 10.0f);
+		verts.put(x + Tile.TILE_SIZE).put(y + Tile.TILE_SIZE).put(1f).put(1f).put(1f).put(((id % 10) + 1) / 10.0f).put(((int) (id / 10)) / 10.0f);
+		verts.put(x).put(y + Tile.TILE_SIZE).put(1f).put(1f).put(1f).put((id % 10) / 10.0f).put(((int) (id / 10)) / 10.0f);
 	}
 	private void deleteModel() {
 		if (vao != null) {
@@ -75,9 +77,12 @@ public class Floor {
 		vao = null;
 	}
 	public void draw(Shader s) {
+		for (int i = 0; i < entityList.size(); i++) {
+			entityList.get(i).draw(s);
+		}
 		s.setUniformf("z", 0.0f);
-		s.setUniformf("x", 32);
-		s.setUniformf("y", 32);
+		s.setUniformf("x", 0);
+		s.setUniformf("y", 0);
 		texture.bind();
 		vao.bind();
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, width * height * 6);

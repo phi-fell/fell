@@ -12,10 +12,13 @@ import org.lwjgl.opengl.GL11;
 
 import com.monolc.fell.graphics.*;
 import com.monolc.fell.resources.ResourceHandler;
+import com.monolc.fell.resources.Sprite;
 import com.monolc.fell.version.*;
 import com.monolc.fell.window.*;
 import com.monolc.fell.world.Entity;
 import com.monolc.fell.world.Floor;
+import com.monolc.fell.world.Location;
+import com.monolc.fell.world.Player;
 
 public class Program {
 	public static void main(String[] args) {
@@ -36,26 +39,23 @@ public class Program {
 		res.getShader("default").setUniformi("width", 800);
 		res.getShader("default").setUniformi("height", 600);
 		Floor floor = new Floor(res.getTexture("tiles"), 10, 10);
-		Entity plr = new Entity(new Sprite(res.getTexture("player"), 32, 32));
+		Player plr = new Player(res.getSprite("player"), new Location(floor, 0, 0));
 		while (w.shouldClose()) {
 			w.update();
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
 			floor.draw(res.getShader("default"));
 			plr.draw(res.getShader("default"));
-			while(w.eventsToQuery()){
+			while (w.eventsToQuery()) {
 				Event e = w.queryEvent();
-				if (e.getType() == Event.KEY_PRESS){
-					if (e.getKey() == GLFW.GLFW_KEY_W){
-						plr.y -= 1;
-					}
-					if (e.getKey() == GLFW.GLFW_KEY_A){
-						plr.x -= 1;
-					}
-					if (e.getKey() == GLFW.GLFW_KEY_S){
-						plr.y += 1;
-					}
-					if (e.getKey() == GLFW.GLFW_KEY_D){
-						plr.x += 1;
+				if (e.getType() == Event.KEY_PRESS) {
+					if (e.getKey() == GLFW.GLFW_KEY_W) {
+						plr.moveUp(1);
+					} else if (e.getKey() == GLFW.GLFW_KEY_A) {
+						plr.moveLeft(1);
+					} else if (e.getKey() == GLFW.GLFW_KEY_S) {
+						plr.moveDown(1);
+					} else if (e.getKey() == GLFW.GLFW_KEY_D) {
+						plr.moveRight(1);
 					}
 				}
 			}

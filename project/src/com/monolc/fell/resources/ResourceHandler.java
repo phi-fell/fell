@@ -15,9 +15,11 @@ import org.lwjgl.BufferUtils;
 public class ResourceHandler {
 	Map<String, Shader> shaders;
 	Map<String, Texture> textures;
+	Map<String, Sprite> sprites;
 	public ResourceHandler() {
-		shaders = new HashMap<String,Shader>();
-		textures = new HashMap<String,Texture>();
+		shaders = new HashMap<String, Shader>();
+		textures = new HashMap<String, Texture>();
+		sprites = new HashMap<String, Sprite>();
 	}
 	public String load(String name) {
 		String ret = "";
@@ -31,17 +33,28 @@ public class ResourceHandler {
 		file.close();
 		return ret;
 	}
-	public Shader getShader(String name){
-		if(shaders.get(name) == null){
+	public String getFMLValue(String fmlFile, String key) {
+		// FML stands for "fell markup language", even though it's not actually
+		// a markup language, this was too good of an opportunity to miss.
+		return fmlFile.substring(fmlFile.indexOf(key+":") + key.length()+1, fmlFile.indexOf("\n", fmlFile.indexOf(key+":")));
+	}
+	public Shader getShader(String name) {
+		if (shaders.get(name) == null) {
 			shaders.put(name, loadShader(name));
 		}
 		return shaders.get(name);
 	}
-	public Texture getTexture(String name){
-		if(textures.get(name) == null){
+	public Texture getTexture(String name) {
+		if (textures.get(name) == null) {
 			textures.put(name, loadTexture(name));
 		}
 		return textures.get(name);
+	}
+	public Sprite getSprite(String name) {
+		if (sprites.get(name) == null) {
+			sprites.put(name, loadSprite(name));
+		}
+		return sprites.get(name);
 	}
 	private Shader loadShader(String name) {
 		return new Shader(load("res/shader/" + name + "_vertex.glsl"), load("res/shader/" + name + "_fragment.glsl"));
@@ -70,5 +83,9 @@ public class ResourceHandler {
 		}
 		buffer.flip();
 		return new Texture(buffer, width, height);
+	}
+	private Sprite loadSprite(String name) {
+		String spriteFile = load("res/sprite/" + name + ".spt");
+		return new Sprite(getTexture(getFMLValue(spriteFile, "texture")), Integer.parseInt(getFMLValue(spriteFile, "width")), Integer.parseInt(getFMLValue(spriteFile, "height")));
 	}
 }
