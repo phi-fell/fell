@@ -29,14 +29,18 @@ public class Floor {
 		width = w;
 		height = h;
 		tiles = new Tile[width][height];
-		entities = new Entity[width][height];
-		entityList = new ArrayList<Entity>();
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				tiles[i][j] = new Tile((i == 0 || j == 0 || i == width - 1 || j == height - 1) ? 1 : 0);
 			}
 		}
-		// entities[5][7] = new Entity(null);
+		entities = new Entity[width][height];
+		entityList = new ArrayList<Entity>();
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				entities[i][j] = null;
+			}
+		}
 		generateModel();
 	}
 	public void generateModel() {
@@ -62,6 +66,9 @@ public class Floor {
 			entityList.remove(getEntityID(x, y));
 		}
 		entities[x][y] = e;
+		if (e != null) {
+			entityList.add(e);
+		}
 	}
 	private int getEntityID(int x, int y) {
 		for (int i = 0; i < entityList.size(); i++) {

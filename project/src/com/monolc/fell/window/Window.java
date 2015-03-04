@@ -16,8 +16,8 @@ public class Window {
 	long id;
 	KeyHandler kh;
 	ArrayList<Event> events;
+	double timeOfInitialization;
 	public Window(int w, int h, String t, int GLMaj, int GLMin) {
-		events = new ArrayList<Event>();
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, GL_TRUE);
 		glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
@@ -25,15 +25,9 @@ public class Window {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GLMin);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
-		id = glfwCreateWindow(w, h, t, NULL, NULL);
-		if (id == NULL) {
-			throw new RuntimeException("Failed to create the GLFW window");
-		}
-		this.bindKeyCallback();
-		this.createContext();
+		construct(w, h, t);
 	}
 	public Window(int w, int h, String t, int GLMaj, int GLMin, boolean visible, boolean resizable, boolean floating, boolean decorated) {
-		events = new ArrayList<Event>();
 		glfwDefaultWindowHints();
 		glfwWindowHint(GLFW_VISIBLE, visible ? GL_TRUE : GL_FALSE);
 		glfwWindowHint(GLFW_RESIZABLE, resizable ? GL_TRUE : GL_FALSE);
@@ -43,12 +37,20 @@ public class Window {
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, GLMin);
 		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
+		construct(w, h, t);
+	}
+	private void construct(int w, int h, String t) {
+		events = new ArrayList<Event>();
 		id = glfwCreateWindow(w, h, t, NULL, NULL);
 		if (id == NULL) {
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
 		this.bindKeyCallback();
 		this.createContext();
+		timeOfInitialization = glfwGetTime();
+	}
+	public double getSecondsSinceInitialization() {
+		return glfwGetTime() - timeOfInitialization;
 	}
 	public Event queryEvent() {
 		return events.remove(0);
@@ -64,6 +66,8 @@ public class Window {
 		glfwMakeContextCurrent(id);
 		GLContext.createFromCurrent();
 		System.out.println("OpenGL V" + GL11.glGetInteger(GL30.GL_MAJOR_VERSION) + "." + GL11.glGetInteger(GL30.GL_MINOR_VERSION) + " Initialized");
+		glEnable(GL11.GL_DEPTH_TEST);
+		glDepthFunc(GL_LEQUAL);
 	}
 	public int getWidth() {
 		IntBuffer width = IntBuffer.allocate(1);
@@ -90,10 +94,9 @@ public class Window {
 		}
 	}
 	public boolean shouldClose() {
-		return GLFW.glfwWindowShouldClose(id) != GL_TRUE;
+		return GLFW.glfwWindowShouldClose(id) == GL_TRUE;
 	}
 	public void update() {
-		double time = glfwGetTime();
 		glfwSwapBuffers(id);
 		glfwPollEvents();
 	}

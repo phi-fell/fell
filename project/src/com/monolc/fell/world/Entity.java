@@ -9,6 +9,7 @@ public class Entity {
 	public Entity(Sprite s, Location loc) {
 		location = loc;
 		sprite = s;
+		location.getFloor().setEntity(location.getX(), location.getY(), this);
 	}
 	public void draw(Shader s) {
 		s.setUniformf("z", 0.9f);
@@ -39,6 +40,7 @@ public class Entity {
 		if (newLoc.isPassable()) {
 			location.clear();
 			location = newLoc;
+			location.getFloor().setEntity(location.getX(), location.getY(), this);
 			return true;
 		}
 		return false;

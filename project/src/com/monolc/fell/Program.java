@@ -4,6 +4,8 @@ import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
+import java.util.Random;
+
 import org.lwjgl.Sys;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
@@ -38,13 +40,17 @@ public class Program {
 		res.getShader("default").bind();
 		res.getShader("default").setUniformi("width", 800);
 		res.getShader("default").setUniformi("height", 600);
-		Floor floor = new Floor(res.getTexture("tiles"), 12, 10);
+		Floor floor = new Floor(res.getTexture("tiles"), 50, 94);
 		Player plr = new Player(res.getSprite("player"), new Location(floor, 2, 2));
-		while (w.shouldClose()) {
+		Entity[] ents = new Entity[10];
+		for (int i = 0; i < 10; i++) {
+			ents[i] = new Entity(res.getSprite("goblin"), new Location(floor, 3 + (i % 3) * 2, 7 + (i % 4) * 2));
+		}
+		int mu = 0; // number of times goblins have moved.
+		Random rand = new Random();
+		while (!w.shouldClose()) {
 			w.update();
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);
-			floor.draw(res.getShader("default"));
-			plr.draw(res.getShader("default"));
+			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 			while (w.eventsToQuery()) {
 				Event e = w.queryEvent();
 				if (e.getType() == Event.KEY_PRESS) {
@@ -59,6 +65,23 @@ public class Program {
 					}
 				}
 			}
+			if (w.getSecondsSinceInitialization() > mu) {
+				for (int i = 0; i < 10; i++) {
+					int randi = rand.nextInt(4);
+					if (randi == 0) {
+						ents[i].moveUp(1);
+					} else if (randi == 1) {
+						ents[i].moveDown(1);
+					} else if (randi == 2) {
+						ents[i].moveLeft(1);
+					} else if (randi == 3) {
+						ents[i].moveRight(1);
+					}
+				}
+				mu++;
+			}
+			plr.moveCameraTo(res.getShader("default"));
+			floor.draw(res.getShader("default"));
 		}
 		w.destroy();
 		glfwTerminate();

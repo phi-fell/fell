@@ -7,9 +7,8 @@ public class Player extends Entity {
 	public Player(Sprite s, Location loc) {
 		super(s, loc);
 	}
-	public void draw(Shader s) {
+	public void moveCameraTo(Shader s) {
 		s.setUniformf("camx", location.getX() * Tile.TILE_SIZE);
 		s.setUniformf("camy", location.getY() * Tile.TILE_SIZE);
-		super.draw(s);
 	}
 }
