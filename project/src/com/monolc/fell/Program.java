@@ -39,7 +39,7 @@ public class Program {
 		res.getShader("default").setUniformi("width", 800);
 		res.getShader("default").setUniformi("height", 600);
 		Floor floor = new Floor(res.getTexture("tiles"), 12, 10);
-		Player plr = new Player(res.getSprite("player"), new Location(floor, 0, 0));
+		Player plr = new Player(res.getSprite("player"), new Location(floor, 2, 2));
 		while (w.shouldClose()) {
 			w.update();
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT);

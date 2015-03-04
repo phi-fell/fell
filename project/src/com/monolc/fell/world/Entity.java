@@ -16,23 +16,31 @@ public class Entity {
 		s.setUniformf("y", location.getY() * Tile.TILE_SIZE);
 		sprite.draw();
 	}
-	public boolean moveUp(int amount){
-		location.modY(amount);
+	public Location getLocation() {
+		return location;
+	}
+	public boolean moveUp(int amount) {
+		moveTo((new Location(location)).modY(amount));
 		return true;
 	}
-	public boolean moveDown(int amount){
-		location.modY(-amount);
+	public boolean moveDown(int amount) {
+		moveTo((new Location(location)).modY(-amount));
 		return true;
 	}
-	public boolean moveLeft(int amount){
-		location.modX(-amount);
+	public boolean moveLeft(int amount) {
+		moveTo((new Location(location)).modX(-amount));
 		return true;
 	}
-	public boolean moveRight(int amount){
-		location.modX(amount);
+	public boolean moveRight(int amount) {
+		moveTo((new Location(location)).modX(amount));
 		return true;
 	}
-	public boolean moveTo(Location newLoc){
+	public boolean moveTo(Location newLoc) {
+		if (newLoc.isPassable()) {
+			location.clear();
+			location = newLoc;
+			return true;
+		}
 		return false;
 	}
 }

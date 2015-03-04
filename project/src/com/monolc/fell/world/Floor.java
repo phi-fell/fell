@@ -33,10 +33,10 @@ public class Floor {
 		entityList = new ArrayList<Entity>();
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				tiles[i][j] = new Tile((i==0||j==0||i==width-1||j==height-1)?1:0);
+				tiles[i][j] = new Tile((i == 0 || j == 0 || i == width - 1 || j == height - 1) ? 1 : 0);
 			}
 		}
-		//entities[5][7] = new Entity(null);
+		// entities[5][7] = new Entity(null);
 		generateModel();
 	}
 	public void generateModel() {
@@ -53,6 +53,26 @@ public class Floor {
 		}
 		vbo = new VBO(vertices);
 		vbo.bind();
+	}
+	public Entity getEntity(int x, int y) {
+		return entities[x][y];
+	}
+	public void setEntity(int x, int y, Entity e) {
+		if (entities[x][y] != null) {
+			entityList.remove(getEntityID(x, y));
+		}
+		entities[x][y] = e;
+	}
+	private int getEntityID(int x, int y) {
+		for (int i = 0; i < entityList.size(); i++) {
+			if (entityList.get(i).getLocation().getX() == x && entityList.get(i).getLocation().getY() == y) {
+				return i;
+			}
+		}
+		return -1;
+	}
+	public Tile getTile(int x, int y) {
+		return tiles[x][y];
 	}
 	private void addTile(int id, int x, int y, FloatBuffer verts) {
 		verts.put(x).put(y).put(1f).put(1f).put(1f).put((id % 10) / 10.0f).put((((int) (id / 10)) + 1) / 10.0f);

@@ -9,8 +9,19 @@ public class Location {
 		this.y = y;
 	}
 	public Location(Location l) {
+		floor = l.getFloor();
 		x = l.getX();
 		y = l.getY();
+	}
+	public void clear(){
+		floor.setEntity(x, y, null);
+	}
+	public Floor getFloor(){
+		return floor;
+	}
+	public Location setFloor(Floor f){
+		floor = f;
+		return this;
 	}
 	public int getX() {
 		return x;
@@ -33,5 +44,11 @@ public class Location {
 	public Location modY(int my) {
 		y += my;
 		return this;
+	}
+	public boolean isPassable() {
+		if (floor.getEntity(x, y) == null && floor.getTile(x,y).isPassable()){
+			return true;
+		}
+		return false;
 	}
 }
