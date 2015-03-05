@@ -7,6 +7,7 @@ public class Tile {
 	int id;
 	public Tile(int idNum) {
 		id = idNum;
+		explored = false;
 	}
 	public int getID() {
 		return id;
@@ -16,5 +17,8 @@ public class Tile {
 	}
 	public boolean isExplored() {
 		return explored;
+	}
+	public void explore(){
+		explored = true;
 	}
 }

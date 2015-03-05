@@ -118,8 +118,8 @@ public class Floor {
 			}
 		}
 		for (int i = 0; i < 50; i++) {
-			int x = rand.nextInt(width / 2) * 2;
-			int y = rand.nextInt(height / 2) * 2;
+			int x = (rand.nextInt((width / 2) - 1) * 2) + 1;
+			int y = (rand.nextInt((height / 2) - 1) * 2) + 1;
 			int rx = rand.nextInt(5) + 2;
 			int ry = rand.nextInt(5) + 2;
 			boolean valid = true;
@@ -132,7 +132,7 @@ public class Floor {
 			}
 			for (int j = x - rx - 1; j <= x + rx + 1; j++) {
 				for (int k = y - ry - 1; k <= y + ry + 1; k++) {
-					if (j > 0 && k > 0 && j < width && k < height && tiles[j][k] != null) {
+					if (j >= 0 && k >= 0 && j < width && k < height && tiles[j][k] != null) {
 						valid = false;
 					}
 				}
@@ -145,5 +145,24 @@ public class Floor {
 				}
 			}
 		}
+		for (int i = 1; i < width; i += 2) {
+			for (int j = 1; j < height; j += 2) {
+				if (null3x3(i, j)) {
+					int x = i;
+					int y = j;
+					tiles[i][j] = new Tile((i * height) + j + 1000);
+				}
+			}
+		}
+	}
+	private boolean null3x3(int x, int y) {
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				if (i >= 0 && j >= 0 && i < width && j < height && tiles[i][j] != null) {
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 }
