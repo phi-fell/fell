@@ -145,24 +145,109 @@ public class Floor {
 				}
 			}
 		}
-		for (int i = 1; i < width; i += 2) {
+		/*for (int i = 1; i < width; i += 2) {
 			for (int j = 1; j < height; j += 2) {
 				if (null3x3(i, j)) {
 					int x = i;
 					int y = j;
-					tiles[i][j] = new Tile((i * height) + j + 1000);
+					tiles[x][y] = new Tile((i * height) + j + 1000);
+					ArrayList<Location> locStack = new ArrayList<Location>();
+					locStack.add(new Location(this, x, y));
+					while (locStack.size() > 0) {
+						while (hasNullAdjacent(x, y)) {
+							int dir = rand.nextInt(4);
+							if (dir == 0 && nullAbove(x, y)) {
+								y++;
+								tiles[x][y] = new Tile((i * height) + j + 1000);
+								locStack.add(new Location(this, x, y));
+							}else if (dir == 1 && nullRight(x, y)) {
+								x++;
+								tiles[x][y] = new Tile((i * height) + j + 1000);
+								locStack.add(new Location(this, x, y));
+							}else if (dir == 2 && nullBelow(x, y)) {
+								y--;
+								tiles[x][y] = new Tile((i * height) + j + 1000);
+								locStack.add(new Location(this, x, y));
+							} else if (dir == 3 && nullLeft(x, y)) {
+								x--;
+								tiles[x][y] = new Tile((i * height) + j + 1000);
+								locStack.add(new Location(this, x, y));
+							}
+						}
+					}
 				}
 			}
-		}
+		}*/
 	}
 	private boolean null3x3(int x, int y) {
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
-				if (i >= 0 && j >= 0 && i < width && j < height && tiles[i][j] != null) {
+				if (i + x >= 0 && j + y >= 0 && i + x < width && j + y < height && tiles[i + x][j + y] != null) {
 					return false;
 				}
 			}
 		}
 		return true;
+	}
+	private boolean nullAbove(int x, int y) {
+		for (int i = -1; i <= 1; i++) {
+			for (int j = 0; j <= 1; j++) {
+				if (i + x >= 0 && j + y >= 0 && i + x < width && j + y < height && tiles[i + x][j + y] != null) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	private boolean nullBelow(int x, int y) {
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 0; j++) {
+				if (i + x >= 0 && j + y >= 0 && i + x < width && j + y < height && tiles[i + x][j + y] != null) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	private boolean nullLeft(int x, int y) {
+		for (int i = -1; i <= 0; i++) {
+			for (int j = -1; j <= 1; j++) {
+				if (i + x >= 0 && j + y >= 0 && i + x < width && j + y < height && tiles[i + x][j + y] != null) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	private boolean nullRight(int x, int y) {
+		for (int i = 0; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				if (i + x >= 0 && j + y >= 0 && i + x < width && j + y < height && tiles[i + x][j + y] != null) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	private boolean nullSurrounded(int x, int y) {
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				if ((i != 0 || j != 0) && i + x >= 0 && j + y >= 0 && i + x < width && j + y < height && tiles[i + x][j + y] != null) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	private boolean hasNullAdjacent(int x, int y) {
+		for (int i = -1; i <= 1; i++) {
+			for (int j = -1; j <= 1; j++) {
+				if ((i == 0 || j == 0) && (i != 0 || j != 0) && i + x >= 0 && j + y >= 0 && i + x < width && j + y < height
+						&& tiles[i + x][j + y] != null) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }
