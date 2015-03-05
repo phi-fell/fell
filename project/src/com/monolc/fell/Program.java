@@ -36,18 +36,13 @@ public class Program {
 		}
 		int GLMajor = 4;
 		int GLMinor = 1;
-		Window w = new Window(800, 600, "Fell " + v.getStage() + " V" + v.getVersion() + ", Build#" + v.getBuild() + " OpenGL V" + GLMajor + "." + GLMinor, GLMajor, GLMinor);
+		Window w = new Window(1600, 900, "Fell " + v.getStage() + " V" + v.getVersion() + ", Build#" + v.getBuild() + " OpenGL V" + GLMajor + "." + GLMinor, GLMajor, GLMinor);
+		w.setPosition(10, 30);
 		res.getShader("default").bind();
-		res.getShader("default").setUniformi("width", 800);
-		res.getShader("default").setUniformi("height", 600);
-		Floor floor = new Floor(res.getTexture("tiles"), 50, 94);
-		Player plr = new Player(res.getSprite("player"), new Location(floor, 2, 2));
-		Entity[] ents = new Entity[10];
-		for (int i = 0; i < 10; i++) {
-			ents[i] = new Entity(res.getSprite("goblin"), new Location(floor, 3 + (i % 3) * 2, 7 + (i % 4) * 2));
-		}
-		int mu = 0; // number of times goblins have moved.
-		Random rand = new Random();
+		res.getShader("default").setUniformi("width", 6400);
+		res.getShader("default").setUniformi("height", 3600);
+		Floor floor = new Floor(res.getTexture("tiles"), 120, 100);
+		Player plr = new Player(res.getSprite("player"), floor.getOpenLocation());
 		while (!w.shouldClose()) {
 			w.update();
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
@@ -64,21 +59,6 @@ public class Program {
 						plr.moveRight(1);
 					}
 				}
-			}
-			if (w.getSecondsSinceInitialization() > mu) {
-				for (int i = 0; i < 10; i++) {
-					int randi = rand.nextInt(4);
-					if (randi == 0) {
-						ents[i].moveUp(1);
-					} else if (randi == 1) {
-						ents[i].moveDown(1);
-					} else if (randi == 2) {
-						ents[i].moveLeft(1);
-					} else if (randi == 3) {
-						ents[i].moveRight(1);
-					}
-				}
-				mu++;
 			}
 			plr.moveCameraTo(res.getShader("default"));
 			floor.draw(res.getShader("default"));

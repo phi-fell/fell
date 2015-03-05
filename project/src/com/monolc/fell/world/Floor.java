@@ -2,6 +2,7 @@ package com.monolc.fell.world;
 
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
+import java.util.Random;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -12,14 +13,11 @@ import com.monolc.fell.resources.Shader;
 import com.monolc.fell.resources.Texture;
 
 public class Floor {
-	// tile, entity, items, structure
-	// bool explored, bool passable, effect(ground on fire), are in tile class
 	Texture texture;
 	VAO vao;
 	VBO vbo;
 	Tile[][] tiles;
 	Entity[][] entities;
-	ArrayList<Entity> entityList;
 	int width;
 	int height;
 	public Floor(Texture tex, int w, int h) {
@@ -29,13 +27,8 @@ public class Floor {
 		width = w;
 		height = h;
 		tiles = new Tile[width][height];
-		for (int i = 0; i < width; i++) {
-			for (int j = 0; j < height; j++) {
-				tiles[i][j] = new Tile((i == 0 || j == 0 || i == width - 1 || j == height - 1) ? 1 : 0);
-			}
-		}
+		generate();
 		entities = new Entity[width][height];
-		entityList = new ArrayList<Entity>();
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				entities[i][j] = null;
@@ -43,43 +36,57 @@ public class Floor {
 		}
 		generateModel();
 	}
-	public void generateModel() {
+	public Entity getEntity(int x, int y) {
+		return entities[x][y];
+	}
+	public void setEntity(int x, int y, Entity e) {
+		entities[x][y] = e;
+	}
+	public Tile getTile(int x, int y) {
+		return tiles[x][y];
+	}
+	public void draw(Shader s) {
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				if (entities[i][j] != null) {
+					entities[i][j].draw(s);
+				}
+			}
+		}
+		s.setUniformf("z", 0.0f);
+		s.setUniformf("x", 0);
+		s.setUniformf("y", 0);
+		texture.bind();
+		vao.bind();
+		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, width * height * 6);
+	}
+	public Location getOpenLocation() {
+		return new Location(this, 50, 50);
+	}
+	private void generateModel() {
 		if (vao != null || vbo != null) {
 			deleteModel();
 		}
 		vao = new VAO();
 		vao.bind();
-		FloatBuffer vertices = BufferUtils.createFloatBuffer(width * height * 6 * 7);
+		int tilenum = 0;
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				addTile(tiles[i][j].getID(), i * Tile.TILE_SIZE, j * Tile.TILE_SIZE, vertices);
+				if (tiles[i][j] != null) {
+					tilenum++;
+				}
+			}
+		}
+		FloatBuffer vertices = BufferUtils.createFloatBuffer(tilenum * 6 * 7);
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				if (tiles[i][j] != null) {
+					addTile(tiles[i][j].getID(), i * Tile.TILE_SIZE, j * Tile.TILE_SIZE, vertices);
+				}
 			}
 		}
 		vbo = new VBO(vertices);
 		vbo.bind();
-	}
-	public Entity getEntity(int x, int y) {
-		return entities[x][y];
-	}
-	public void setEntity(int x, int y, Entity e) {
-		if (entities[x][y] != null) {
-			entityList.remove(getEntityID(x, y));
-		}
-		entities[x][y] = e;
-		if (e != null) {
-			entityList.add(e);
-		}
-	}
-	private int getEntityID(int x, int y) {
-		for (int i = 0; i < entityList.size(); i++) {
-			if (entityList.get(i).getLocation().getX() == x && entityList.get(i).getLocation().getY() == y) {
-				return i;
-			}
-		}
-		return -1;
-	}
-	public Tile getTile(int x, int y) {
-		return tiles[x][y];
 	}
 	private void addTile(int id, int x, int y, FloatBuffer verts) {
 		verts.put(x).put(y).put(1f).put(1f).put(1f).put((id % 10) / 10.0f).put((((int) (id / 10)) + 1) / 10.0f);
@@ -103,15 +110,40 @@ public class Floor {
 		vbo = null;
 		vao = null;
 	}
-	public void draw(Shader s) {
-		for (int i = 0; i < entityList.size(); i++) {
-			entityList.get(i).draw(s);
+	private void generate() {
+		Random rand = new Random();
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				tiles[i][j] = null;
+			}
 		}
-		s.setUniformf("z", 0.0f);
-		s.setUniformf("x", 0);
-		s.setUniformf("y", 0);
-		texture.bind();
-		vao.bind();
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, width * height * 6);
+		for (int i = 0; i < 50; i++) {
+			int x = rand.nextInt(width / 2) * 2;
+			int y = rand.nextInt(height / 2) * 2;
+			int rx = rand.nextInt(5) + 2;
+			int ry = rand.nextInt(5) + 2;
+			boolean valid = true;
+			for (int j = x - rx; j <= x + rx; j++) {
+				for (int k = y - ry; k <= y + ry; k++) {
+					if (j < 0 || k < 0 || j >= width || k >= height || tiles[j][k] != null) {
+						valid = false;
+					}
+				}
+			}
+			for (int j = x - rx - 1; j <= x + rx + 1; j++) {
+				for (int k = y - ry - 1; k <= y + ry + 1; k++) {
+					if (j > 0 && k > 0 && j < width && k < height && tiles[j][k] != null) {
+						valid = false;
+					}
+				}
+			}
+			if (valid) {
+				for (int j = x - rx; j <= x + rx; j++) {
+					for (int k = y - ry; k <= y + ry; k++) {
+						tiles[j][k] = new Tile(i);
+					}
+				}
+			}
+		}
 	}
 }

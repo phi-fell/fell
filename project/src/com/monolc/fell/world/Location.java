@@ -13,13 +13,13 @@ public class Location {
 		x = l.getX();
 		y = l.getY();
 	}
-	public void clear(){
+	public void clear() {
 		floor.setEntity(x, y, null);
 	}
-	public Floor getFloor(){
+	public Floor getFloor() {
 		return floor;
 	}
-	public Location setFloor(Floor f){
+	public Location setFloor(Floor f) {
 		floor = f;
 		return this;
 	}
@@ -46,7 +46,7 @@ public class Location {
 		return this;
 	}
 	public boolean isPassable() {
-		if (floor.getEntity(x, y) == null && floor.getTile(x,y).isPassable()){
+		if (floor.getEntity(x, y) == null && floor.getTile(x, y).isPassable()) {
 			return true;
 		}
 		return false;
