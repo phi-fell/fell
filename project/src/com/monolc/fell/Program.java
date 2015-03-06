@@ -39,9 +39,9 @@ public class Program {
 		Window w = new Window(1600, 900, "Fell " + v.getStage() + " V" + v.getVersion() + ", Build#" + v.getBuild() + " OpenGL V" + GLMajor + "." + GLMinor, GLMajor, GLMinor);
 		w.setPosition(10, 30);
 		res.getShader("default").bind();
-		res.getShader("default").setUniformi("width", 6400);
-		res.getShader("default").setUniformi("height", 3600);
-		Floor floor = new Floor(res.getTexture("tilesC"), 120, 100);
+		res.getShader("default").setUniformi("width", 1600);
+		res.getShader("default").setUniformi("height", 900);
+		Floor floor = new Floor(res.getTexture("tiles"), 120, 100);
 		Player plr = new Player(res.getSprite("player"), floor.getOpenLocation());
 		while (!w.shouldClose()) {
 			w.update();

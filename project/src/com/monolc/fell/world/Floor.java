@@ -61,7 +61,14 @@ public class Floor {
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, width * height * 6);
 	}
 	public Location getOpenLocation() {
-		return new Location(this, 50, 50);
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				if (tiles[i][j] != null && tiles[i][j].isPassable()) {
+					return new Location(this, i, j);
+				}
+			}
+		}
+		return null;
 	}
 	private void generateModel() {
 		if (vao != null || vbo != null) {
@@ -201,6 +208,51 @@ public class Floor {
 			}
 		}
 		connect(firstRoomID, rand);
+		prune();
+		boolean[][] walls = new boolean[width][height];
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				walls[i][j] = false;
+				if (tiles[i][j] != null) {
+					tiles[i][j] = new Tile(0);
+				} else if (nonNullSurrounded(i, j) > 0) {
+					walls[i][j] = true;
+				}
+			}
+		}
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				if (walls[i][j]) {
+					tiles[i][j] = new Tile(1);
+				}
+			}
+		}
+	}
+	private void prune() {
+		boolean unpruned = true;
+		while (unpruned) {
+			unpruned = false;
+			for (int i = 0; i < width; i++) {
+				for (int j = 0; j < height; j++) {
+					if (tiles[i][j] != null && nonNullAdjacent(i, j) <= 1) {
+						prune(i, j);
+						unpruned = true;
+					}
+				}
+			}
+		}
+	}
+	private void prune(int x, int y) {
+		if (x < 0 || y < 0 || x >= width || y >= height || tiles[x][y] == null) {
+			return;
+		}
+		if (nonNullAdjacent(x, y) <= 1) {
+			prune(x, y + 1);
+			prune(x + 1, y);
+			prune(x, y - 1);
+			prune(x - 1, y);
+			tiles[x][y] = null;
+		}
 	}
 	private void connect(int id, Random rand) {
 		while (!isOnlyID(id)) {
@@ -282,25 +334,25 @@ public class Floor {
 				dir = rand.nextInt(4);
 			} while (!dirValid[dir]);
 			if (dir == 0) {
-				if (nullAbove(l.getX(), l.getY()) && l.getY() < height - 1) {
+				if (nullAbove(l.getX(), l.getY()) && l.getY() < height - 2) {
 					return dir;
 				} else {
 					dirValid[dir] = false;
 				}
 			} else if (dir == 1) {
-				if (nullRight(l.getX(), l.getY()) && l.getX() < width - 1) {
+				if (nullRight(l.getX(), l.getY()) && l.getX() < width - 2) {
 					return dir;
 				} else {
 					dirValid[dir] = false;
 				}
 			} else if (dir == 2) {
-				if (nullBelow(l.getX(), l.getY()) && l.getY() > 0) {
+				if (nullBelow(l.getX(), l.getY()) && l.getY() > 1) {
 					return dir;
 				} else {
 					dirValid[dir] = false;
 				}
 			} else if (dir == 3) {
-				if (nullLeft(l.getX(), l.getY()) && l.getX() > 0) {
+				if (nullLeft(l.getX(), l.getY()) && l.getX() > 1) {
 					return dir;
 				} else {
 					dirValid[dir] = false;
