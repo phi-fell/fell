@@ -258,10 +258,34 @@ public class Floor {
 		while (!isOnlyID(id)) {
 			int x = -1;
 			int y = -1;
+			int count = 0;
 			for (int i = 0; i < width; i++) {
 				for (int j = 0; j < height; j++) {
 					if (tiles[i][j] == null && hasIDandOther(i, j, id)) {
-						if (rand.nextInt(200) == 3) {
+						count++;
+					}
+				}
+			}
+			if (count == 0) {
+				break;
+			}
+			int num = rand.nextInt((count / 200) + 1) + 1;
+			boolean[] shouldConnect = new boolean[count];
+			for (int i = 0; i < count; i++) {
+				shouldConnect[i] = false;
+			}
+			while (num > 0) {
+				int p = rand.nextInt(shouldConnect.length);
+				if (!shouldConnect[p]) {
+					shouldConnect[p] = true;
+					num--;
+				}
+			}
+			for (int i = 0; i < width; i++) {
+				for (int j = 0; j < height; j++) {
+					if (tiles[i][j] == null && hasIDandOther(i, j, id)) {
+						count--;
+						if (count >= 0 && shouldConnect[count]) {
 							tiles[i][j] = new Tile(id);
 							x = i;
 							y = j;
@@ -426,7 +450,8 @@ public class Floor {
 		int ret = 0;
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
-				if ((i == 0 || j == 0) && (i != 0 || j != 0) && i + x >= 0 && j + y >= 0 && i + x < width && j + y < height && tiles[i + x][j + y] != null) {
+				if ((i == 0 || j == 0) && (i != 0 || j != 0) && i + x >= 0 && j + y >= 0 && i + x < width && j + y < height
+						&& tiles[i + x][j + y] != null) {
 					ret++;
 				}
 			}
