@@ -111,6 +111,7 @@ public class Floor {
 		vao = null;
 	}
 	private void generate() {
+		int firstRoomID = -1;
 		Random rand = new Random();
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
@@ -148,6 +149,9 @@ public class Floor {
 					for (int k = y - ry; k <= y + ry; k++) {
 						tiles[j][k] = new Tile(i);
 					}
+				}
+				if (firstRoomID == -1) {
+					firstRoomID = i;
 				}
 			}
 		}
@@ -195,6 +199,79 @@ public class Floor {
 					}
 				}
 			}
+		}
+		connect(firstRoomID, rand);
+	}
+	private void connect(int id, Random rand) {
+		while (!isOnlyID(id)) {
+			int x = -1;
+			int y = -1;
+			for (int i = 0; i < width; i++) {
+				for (int j = 0; j < height; j++) {
+					if (tiles[i][j] == null && hasIDandOther(i, j, id)) {
+						if (rand.nextInt(200) == 3) {
+							tiles[i][j] = new Tile(id);
+							x = i;
+							y = j;
+						}
+					}
+				}
+			}
+			if (x != -1 && y != -1) {
+				floodFill(x, y, tiles[x][y]);
+			}
+		}
+	}
+	private boolean isOnlyID(int id) {
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				if (tiles[i][j] != null && tiles[i][j].getID() != id) {
+					return false;
+				}
+			}
+		}
+		return true;
+	}
+	private boolean hasIDandOther(int x, int y, int id) {
+		boolean hasID = false;
+		if (y + 1 < height && tiles[x][y + 1] != null && tiles[x][y + 1].getID() == id) {
+			hasID = true;
+		} else if (y > 0 && tiles[x][y - 1] != null && tiles[x][y - 1].getID() == id) {
+			hasID = true;
+		} else if (x + 1 < width && tiles[x + 1][y] != null && tiles[x + 1][y].getID() == id) {
+			hasID = true;
+		} else if (x > 0 && tiles[x - 1][y] != null && tiles[x - 1][y].getID() == id) {
+			hasID = true;
+		}
+		boolean hasOther = false;
+		if (y + 1 < height && tiles[x][y + 1] != null && tiles[x][y + 1].getID() != id) {
+			hasOther = true;
+		} else if (y > 0 && tiles[x][y - 1] != null && tiles[x][y - 1].getID() != id) {
+			hasOther = true;
+		} else if (x + 1 < width && tiles[x + 1][y] != null && tiles[x + 1][y].getID() != id) {
+			hasOther = true;
+		} else if (x > 0 && tiles[x - 1][y] != null && tiles[x - 1][y].getID() != id) {
+			hasOther = true;
+		}
+		return hasID && hasOther && nonNullAdjacent(x, y) == 2;
+	}
+	private void floodFill(int x, int y, Tile t) {
+		t.explore();
+		if (y < height - 1 && tiles[x][y + 1] != null && !tiles[x][y + 1].isExplored()) {
+			tiles[x][y + 1] = t;
+			floodFill(x, y + 1, t);
+		}
+		if (x < width - 1 && tiles[x + 1][y] != null && !tiles[x + 1][y].isExplored()) {
+			tiles[x + 1][y] = t;
+			floodFill(x + 1, y, t);
+		}
+		if (y > 0 && tiles[x][y - 1] != null && !tiles[x][y - 1].isExplored()) {
+			tiles[x][y - 1] = t;
+			floodFill(x, y - 1, t);
+		}
+		if (x > 0 && tiles[x - 1][y] != null && !tiles[x - 1][y].isExplored()) {
+			tiles[x - 1][y] = t;
+			floodFill(x - 1, y, t);
 		}
 	}
 	private int branchPath(Location l, Random rand) {
@@ -282,24 +359,26 @@ public class Floor {
 		}
 		return true;
 	}
-	private boolean nullSurrounded(int x, int y) {
+	private int nonNullSurrounded(int x, int y) {
+		int ret = 0;
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
 				if ((i != 0 || j != 0) && i + x >= 0 && j + y >= 0 && i + x < width && j + y < height && tiles[i + x][j + y] != null) {
-					return false;
+					ret++;
 				}
 			}
 		}
-		return true;
+		return ret;
 	}
-	private boolean hasNullAdjacent(int x, int y) {
+	private int nonNullAdjacent(int x, int y) {
+		int ret = 0;
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
 				if ((i == 0 || j == 0) && (i != 0 || j != 0) && i + x >= 0 && j + y >= 0 && i + x < width && j + y < height && tiles[i + x][j + y] != null) {
-					return true;
+					ret++;
 				}
 			}
 		}
-		return false;
+		return ret;
 	}
 }
