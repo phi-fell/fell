@@ -5,7 +5,7 @@ import com.monolc.fell.resources.Sprite;
 
 public class Player extends Entity {
 	public Player(Sprite s, Location loc) {
-		super(s, loc);
+		super(s, loc, Entity.PLAYER);
 	}
 	public void moveCameraTo(Shader s) {
 		s.setUniformf("camx", (posX + 0.5f) * Tile.TILE_SIZE);

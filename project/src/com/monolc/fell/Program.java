@@ -4,22 +4,16 @@ import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
-import java.util.Random;
-
 import org.lwjgl.Sys;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL11;
 
-import com.monolc.fell.graphics.*;
 import com.monolc.fell.resources.ResourceHandler;
-import com.monolc.fell.resources.Sprite;
 import com.monolc.fell.version.*;
 import com.monolc.fell.window.*;
-import com.monolc.fell.world.Entity;
 import com.monolc.fell.world.Floor;
-import com.monolc.fell.world.Location;
 import com.monolc.fell.world.Player;
 
 public class Program {
@@ -45,20 +39,22 @@ public class Program {
 		Floor floor = new Floor(res, res.getTexture("tiles"), 121, 101);
 		Player plr = new Player(res.getSprite("player"), floor.getOpenLocation());
 		int zoom = 0;
+		double startTime = w.getSecondsSinceInitialization();
+		int updates = 0;
 		while (!w.shouldClose()) {
 			w.update();
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
 			while (w.eventsToQuery()) {
 				Event e = w.queryEvent();
-				if (e.getType() == Event.KEY_PRESS) {
+				if (e.getType() == Event.KEY_PRESS || e.getType() == Event.KEY_REPEAT) {
 					if (e.getKey() == GLFW.GLFW_KEY_W) {
-						plr.moveUp(1);
+						plr.moveUp();
 					} else if (e.getKey() == GLFW.GLFW_KEY_A) {
-						plr.moveLeft(1);
+						plr.moveLeft();
 					} else if (e.getKey() == GLFW.GLFW_KEY_S) {
-						plr.moveDown(1);
+						plr.moveDown();
 					} else if (e.getKey() == GLFW.GLFW_KEY_D) {
-						plr.moveRight(1);
+						plr.moveRight();
 					}
 				} else if (e.getType() == Event.MOUSE_SCROLL) {
 					zoom += e.getY();
@@ -71,7 +67,11 @@ public class Program {
 					res.getShader("default").setUniformf("zoom", (float) Math.pow(1.4, zoom));
 				}
 			}
-			floor.update();
+			int n = (int) (w.getSecondsSinceInitialization() - startTime) - updates;
+			if (n > 0) {
+				updates++;
+			}
+			floor.update(n > 0 ? 1 : 0);
 			plr.moveCameraTo(res.getShader("default"));
 			floor.draw(res.getShader("default"));
 		}

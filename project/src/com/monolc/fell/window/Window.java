@@ -103,7 +103,7 @@ public class Window {
 		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
 			glfwSetWindowShouldClose(id, GL_TRUE);
 		} else {
-			if (action == GLFW_PRESS) {
+			if (action == GLFW_PRESS || action == GLFW_RELEASE || action == GLFW_REPEAT) {
 				events.add(new Event(key, action, Event.KEYBOARD));
 			}
 		}

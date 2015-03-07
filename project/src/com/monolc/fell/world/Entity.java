@@ -4,11 +4,14 @@ import com.monolc.fell.resources.Shader;
 import com.monolc.fell.resources.Sprite;
 
 public class Entity {
+	public static final int PLAYER = 0, GOBLIN = 1;
 	Sprite sprite;
 	Location location;
 	boolean inMove;
 	float posX, posY;
-	public Entity(Sprite s, Location loc) {
+	int type;
+	public Entity(Sprite s, Location loc, int t) {
+		type = t;
 		location = loc;
 		sprite = s;
 		location.getFloor().setEntity(location.getX(), location.getY(), this);
@@ -16,8 +19,11 @@ public class Entity {
 		posY = loc.getY();
 		inMove = false;
 	}
+	int getType() {
+		return type;
+	}
 	public void update() {
-		float c = 0.01f;
+		float c = 0.02f;
 		if (inMove) {
 			if (Math.abs(posX - location.getX()) < c && Math.abs(posY - location.getY()) < c) {
 				posX = location.getX();
@@ -47,23 +53,23 @@ public class Entity {
 	public Location getLocation() {
 		return location;
 	}
-	public boolean moveUp(int amount) {
-		return moveTo((new Location(location)).modY(amount));
+	public boolean moveUp() {
+		return moveTo((new Location(location)).modY(1));
 	}
-	public boolean moveDown(int amount) {
-		return moveTo((new Location(location)).modY(-amount));
+	public boolean moveDown() {
+		return moveTo((new Location(location)).modY(-1));
 	}
-	public boolean moveLeft(int amount) {
-		return moveTo((new Location(location)).modX(-amount));
+	public boolean moveLeft() {
+		return moveTo((new Location(location)).modX(-1));
 	}
-	public boolean moveRight(int amount) {
-		return moveTo((new Location(location)).modX(amount));
+	public boolean moveRight() {
+		return moveTo((new Location(location)).modX(1));
 	}
 	public boolean moveTo(Location newLoc) {
 		if (inMove) {
 			return false;
 		}
-		if (newLoc.isPassable()) {
+		if (newLoc.isPassable() || (type == PLAYER && newLoc.getFloor().getEntity(newLoc) != null && newLoc.getFloor().getEntity(newLoc).getType() == Entity.GOBLIN)) {
 			location.clear();
 			location = newLoc;
 			location.getFloor().setEntity(location.getX(), location.getY(), this);

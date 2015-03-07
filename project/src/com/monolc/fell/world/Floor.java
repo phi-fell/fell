@@ -32,11 +32,16 @@ public class Floor {
 		width = w;
 		height = h;
 		tiles = new Tile[width][height];
-		generate();
+		Random rand = new Random();
+		generate(rand);
 		entities = new Entity[width][height];
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				entities[i][j] = null;
+				if (tiles[i][j] != null && tiles[i][j].isPassable() && rand.nextInt(100) == 3) {
+					entities[i][j] = new Entity(rh.getSprite("goblin"), new Location(this, i, j), Entity.GOBLIN);
+				} else {
+					entities[i][j] = null;
+				}
 			}
 		}
 		generateModel();
@@ -44,17 +49,33 @@ public class Floor {
 	public Entity getEntity(int x, int y) {
 		return entities[x][y];
 	}
+	public Entity getEntity(Location l) {
+		return getEntity(l.getX(), l.getY());
+	}
 	public void setEntity(int x, int y, Entity e) {
 		entities[x][y] = e;
 	}
 	public Tile getTile(int x, int y) {
 		return tiles[x][y];
 	}
-	public void update() {
+	public void update(int dt) {
+		Random r = new Random();
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (entities[i][j] != null) {
 					entities[i][j].update();
+					if (entities[i][j].getType() == Entity.GOBLIN && dt > 0) {
+						int d = r.nextInt(4);
+						if (d == 0) {
+							entities[i][j].moveUp();
+						} else if (d == 1) {
+							entities[i][j].moveRight();
+						} else if (d == 2) {
+							entities[i][j].moveDown();
+						} else if (d == 3) {
+							entities[i][j].moveLeft();
+						}
+					}
 				}
 			}
 		}
@@ -77,7 +98,7 @@ public class Floor {
 	public Location getOpenLocation() {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				if (tiles[i][j] != null && tiles[i][j].isPassable()) {
+				if (tiles[i][j] != null && tiles[i][j].isPassable() && entities[i][j] == null) {
 					return new Location(this, i, j);
 				}
 			}
@@ -126,9 +147,8 @@ public class Floor {
 		vbo = null;
 		vao = null;
 	}
-	private void generate() {
+	private void generate(Random rand) {
 		int firstRoomID = -1;
-		Random rand = new Random();
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				tiles[i][j] = null;

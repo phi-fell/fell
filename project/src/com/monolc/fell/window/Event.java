@@ -3,7 +3,7 @@ package com.monolc.fell.window;
 import org.lwjgl.glfw.GLFW;
 
 public class Event {
-	public static final int KEY_PRESS = 0, KEY_RELEASE = 1, MOUSE_CLICK = 2, MOUSE_RELEASE = 3, MOUSE_SCROLL = 4;
+	public static final int KEY_PRESS = 0, KEY_REPEAT = 1, KEY_RELEASE = 2, MOUSE_CLICK = 3, MOUSE_RELEASE = 4, MOUSE_SCROLL = 5;
 	public static final int KEYBOARD = 0, MOUSE_BUTTON = 1, SCROLL_WHEEL = 2;
 	int type;
 	int key;
@@ -14,6 +14,8 @@ public class Event {
 				type = KEY_PRESS;
 			} else if (action == GLFW.GLFW_RELEASE) {
 				type = KEY_RELEASE;
+			} else if (action == GLFW.GLFW_REPEAT){
+				type = KEY_REPEAT;
 			}
 		} else if (source == MOUSE_BUTTON) {
 			if (action == GLFW.GLFW_PRESS) {
