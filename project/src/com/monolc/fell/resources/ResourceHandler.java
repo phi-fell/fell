@@ -18,6 +18,7 @@ public class ResourceHandler {
 	Map<String, Texture> textures;
 	Map<String, Sprite> sprites;
 	Map<String, TileData> tiledatas;
+	Map<String, FMLFile> menus;
 	public ResourceHandler() {
 		shaders = new HashMap<String, Shader>();
 		textures = new HashMap<String, Texture>();
@@ -36,10 +37,8 @@ public class ResourceHandler {
 		file.close();
 		return ret;
 	}
-	public String getFMLValue(String fmlFile, String key) {
-		// FML stands for "fell markup language", even though it's not actually
-		// a markup language, this was too good of an opportunity to miss.
-		return fmlFile.substring(fmlFile.indexOf(key + ":") + key.length() + 1, fmlFile.indexOf("\n", fmlFile.indexOf(key + ":")));
+	public String getValue(String file, String key) {
+		return file.substring(file.indexOf(key + ":") + key.length() + 1, file.indexOf("\n", file.indexOf(key + ":")));
 	}
 	public Shader getShader(String name) {
 		if (shaders.get(name) == null) {
@@ -64,6 +63,12 @@ public class ResourceHandler {
 			tiledatas.put(id + "", loadTileData(id));
 		}
 		return tiledatas.get(id + "");
+	}
+	public FMLFile getMenu(String name) {
+		if (menus.get(name) == null) {
+			menus.put(name, loadMenu(name));
+		}
+		return menus.get(name);
 	}
 	private Shader loadShader(String name) {
 		return new Shader(load("res/shader/" + name + "_vertex.glsl"), load("res/shader/" + name + "_fragment.glsl"));
@@ -95,11 +100,14 @@ public class ResourceHandler {
 	}
 	private Sprite loadSprite(String name) {
 		String spriteFile = load("res/sprite/" + name + ".spt");
-		return new Sprite(getTexture(getFMLValue(spriteFile, "texture")), Integer.parseInt(getFMLValue(spriteFile, "width")), Integer.parseInt(getFMLValue(spriteFile, "height")));
+		return new Sprite(getTexture(getValue(spriteFile, "texture")), Integer.parseInt(getValue(spriteFile, "width")), Integer.parseInt(getValue(spriteFile, "height")));
 	}
 	private TileData loadTileData(int id) {
 		String tileFile = load("res/tile/" + id + ".til");
-		return new TileData(Integer.parseInt(getFMLValue(tileFile, "noneID")), Integer.parseInt(getFMLValue(tileFile, "outerID")), Integer.parseInt(getFMLValue(tileFile, "verticalID")),
-				Integer.parseInt(getFMLValue(tileFile, "horizontalID")), Integer.parseInt(getFMLValue(tileFile, "innerID")));
+		return new TileData(Integer.parseInt(getValue(tileFile, "noneID")), Integer.parseInt(getValue(tileFile, "outerID")), Integer.parseInt(getValue(tileFile, "verticalID")),
+				Integer.parseInt(getValue(tileFile, "horizontalID")), Integer.parseInt(getValue(tileFile, "innerID")));
+	}
+	private FMLFile loadMenu(String name) {
+		return new FMLFile(load("res/ui/" + name + ".fml"));
 	}
 }

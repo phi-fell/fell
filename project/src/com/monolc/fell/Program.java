@@ -64,7 +64,7 @@ public class Program {
 					if (zoom < -2) {
 						zoom = -2;
 					}
-					res.getShader("default").setUniformf("zoom", (float) Math.pow(1.4, zoom));
+					res.getShader("default").setUniformf("zoom", ((int)(Math.pow(1.4, zoom) * 10)) / 10.0f);
 				}
 			}
 			int n = (int) (w.getSecondsSinceInitialization() - startTime) - updates;
