@@ -45,6 +45,15 @@ public class Floor {
 	public Tile getTile(int x, int y) {
 		return tiles[x][y];
 	}
+	public void update() {
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				if (entities[i][j] != null) {
+					entities[i][j].update();
+				}
+			}
+		}
+	}
 	public void draw(Shader s) {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
@@ -139,7 +148,7 @@ public class Floor {
 			boolean valid = true;
 			for (int j = x - rx; j <= x + rx; j++) {
 				for (int k = y - ry; k <= y + ry; k++) {
-					if (j < 0 || k < 0 || j >= width || k >= height || tiles[j][k] != null) {
+					if (j < 1 || k < 1 || j >= width - 1 || k >= height - 1 || tiles[j][k] != null) {
 						valid = false;
 					}
 				}
@@ -174,33 +183,43 @@ public class Floor {
 						int dir = branchPath(locStack.get(locStack.size() - 1), rand);
 						switch (dir) {
 							case -1:
-								locStack.remove(locStack.size() - 1);
-								if (locStack.size() <= 0) {
-									break outer;
+								for (int a = 0; a < 2; a++) {
+									locStack.remove(locStack.size() - 1);
+									if (locStack.size() <= 0) {
+										break outer;
+									}
 								}
 								Location l = locStack.get(locStack.size() - 1);
 								x = l.getX();
 								y = l.getY();
 								break;
 							case 0:
-								y++;
-								tiles[x][y] = new Tile((i * height) + j + 1000);
-								locStack.add(new Location(this, x, y));
+								for (int a = 0; a < 2; a++) {
+									y++;
+									tiles[x][y] = new Tile((i * height) + j + 1000);
+									locStack.add(new Location(this, x, y));
+								}
 								break;
 							case 1:
-								x++;
-								tiles[x][y] = new Tile((i * height) + j + 1000);
-								locStack.add(new Location(this, x, y));
+								for (int a = 0; a < 2; a++) {
+									x++;
+									tiles[x][y] = new Tile((i * height) + j + 1000);
+									locStack.add(new Location(this, x, y));
+								}
 								break;
 							case 2:
-								y--;
-								tiles[x][y] = new Tile((i * height) + j + 1000);
-								locStack.add(new Location(this, x, y));
+								for (int a = 0; a < 2; a++) {
+									y--;
+									tiles[x][y] = new Tile((i * height) + j + 1000);
+									locStack.add(new Location(this, x, y));
+								}
 								break;
 							case 3:
-								x--;
-								tiles[x][y] = new Tile((i * height) + j + 1000);
-								locStack.add(new Location(this, x, y));
+								for (int a = 0; a < 2; a++) {
+									x--;
+									tiles[x][y] = new Tile((i * height) + j + 1000);
+									locStack.add(new Location(this, x, y));
+								}
 								break;
 						}
 					}
@@ -209,24 +228,96 @@ public class Floor {
 		}
 		connect(firstRoomID, rand);
 		prune();
-		boolean[][] walls = new boolean[width][height];
+		int[][] walls = new int[width][height];
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				walls[i][j] = false;
+				walls[i][j] = -1;
 				if (tiles[i][j] != null) {
 					tiles[i][j] = new Tile(0);
 				} else if (nonNullSurrounded(i, j) > 0) {
-					walls[i][j] = true;
+					if (aboveNonNull(i, j)) {
+						if (rightNonNull(i, j)) {
+							if (belowNonNull(i, j)) {
+								if (leftNonNull(i, j)) {
+									walls[i][j] = 81;
+								} else {
+									walls[i][j] = 93;
+								}
+							} else {
+								if (leftNonNull(i, j)) {
+									walls[i][j] = 83;
+								} else {
+									walls[i][j] = 72;
+								}
+							}
+						} else {
+							if (belowNonNull(i, j)) {
+								if (leftNonNull(i, j)) {
+									walls[i][j] = 73;
+								} else {
+									walls[i][j] = 84;
+								}
+							} else {
+								if (leftNonNull(i, j)) {
+									walls[i][j] = 70;
+								} else {
+									walls[i][j] = 71;
+								}
+							}
+						}
+					} else {
+						if (rightNonNull(i, j)) {
+							if (belowNonNull(i, j)) {
+								if (leftNonNull(i, j)) {
+									walls[i][j] = 74;
+								} else {
+									walls[i][j] = 92;
+								}
+							} else {
+								if (leftNonNull(i, j)) {
+									walls[i][j] = 94;
+								} else {
+									walls[i][j] = 82;
+								}
+							}
+						} else {
+							if (belowNonNull(i, j)) {
+								if (leftNonNull(i, j)) {
+									walls[i][j] = 90;
+								} else {
+									walls[i][j] = 91;
+								}
+							} else {
+								if (leftNonNull(i, j)) {
+									walls[i][j] = 80;
+								} else {
+									walls[i][j] = -1;
+								}
+							}
+						}
+					}
 				}
 			}
 		}
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				if (walls[i][j]) {
-					tiles[i][j] = new Tile(1);
+				if (walls[i][j] != -1) {
+					tiles[i][j] = new Tile(walls[i][j]);
 				}
 			}
 		}
+	}
+	private boolean aboveNonNull(int x, int y) {
+		return (y < height - 1 && tiles[x][y + 1] != null);
+	}
+	private boolean rightNonNull(int x, int y) {
+		return (x < width - 1 && tiles[x + 1][y] != null);
+	}
+	private boolean belowNonNull(int x, int y) {
+		return (y > 0 && tiles[x][y - 1] != null);
+	}
+	private boolean leftNonNull(int x, int y) {
+		return (x > 0 && tiles[x - 1][y] != null);
 	}
 	private void prune() {
 		boolean unpruned = true;
@@ -397,7 +488,7 @@ public class Floor {
 	}
 	private boolean nullAbove(int x, int y) {
 		for (int i = -1; i <= 1; i++) {
-			for (int j = 1; j <= 2; j++) {
+			for (int j = 1; j <= 3; j++) {
 				if (i + x >= 0 && j + y >= 0 && i + x < width && j + y < height && tiles[i + x][j + y] != null) {
 					return false;
 				}
@@ -407,7 +498,7 @@ public class Floor {
 	}
 	private boolean nullBelow(int x, int y) {
 		for (int i = -1; i <= 1; i++) {
-			for (int j = -2; j <= -1; j++) {
+			for (int j = -3; j <= -1; j++) {
 				if (i + x >= 0 && j + y >= 0 && i + x < width && j + y < height && tiles[i + x][j + y] != null) {
 					return false;
 				}
@@ -416,7 +507,7 @@ public class Floor {
 		return true;
 	}
 	private boolean nullLeft(int x, int y) {
-		for (int i = -2; i <= -1; i++) {
+		for (int i = -3; i <= -1; i++) {
 			for (int j = -1; j <= 1; j++) {
 				if (i + x >= 0 && j + y >= 0 && i + x < width && j + y < height && tiles[i + x][j + y] != null) {
 					return false;
@@ -426,7 +517,7 @@ public class Floor {
 		return true;
 	}
 	private boolean nullRight(int x, int y) {
-		for (int i = 1; i <= 2; i++) {
+		for (int i = 1; i <= 3; i++) {
 			for (int j = -1; j <= 1; j++) {
 				if (i + x >= 0 && j + y >= 0 && i + x < width && j + y < height && tiles[i + x][j + y] != null) {
 					return false;
@@ -450,8 +541,7 @@ public class Floor {
 		int ret = 0;
 		for (int i = -1; i <= 1; i++) {
 			for (int j = -1; j <= 1; j++) {
-				if ((i == 0 || j == 0) && (i != 0 || j != 0) && i + x >= 0 && j + y >= 0 && i + x < width && j + y < height
-						&& tiles[i + x][j + y] != null) {
+				if ((i == 0 || j == 0) && (i != 0 || j != 0) && i + x >= 0 && j + y >= 0 && i + x < width && j + y < height && tiles[i + x][j + y] != null) {
 					ret++;
 				}
 			}

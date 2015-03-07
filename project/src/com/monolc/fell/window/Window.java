@@ -15,6 +15,8 @@ import static org.lwjgl.system.MemoryUtil.NULL;
 public class Window {
 	long id;
 	KeyHandler kh;
+	MouseHandler mh;
+	ScrollHandler sh;
 	ArrayList<Event> events;
 	double timeOfInitialization;
 	public Window(int w, int h, String t, int GLMaj, int GLMin) {
@@ -46,6 +48,8 @@ public class Window {
 			throw new RuntimeException("Failed to create the GLFW window");
 		}
 		this.bindKeyCallback();
+		this.bindMouseCallback();
+		this.bindScrollCallback();
 		this.createContext();
 		timeOfInitialization = glfwGetTime();
 	}
@@ -61,6 +65,14 @@ public class Window {
 	public void bindKeyCallback() {
 		kh = new KeyHandler(this);
 		glfwSetKeyCallback(id, kh);
+	}
+	public void bindMouseCallback() {
+		mh = new MouseHandler(this);
+		glfwSetMouseButtonCallback(id, mh);
+	}
+	public void bindScrollCallback() {
+		sh = new ScrollHandler(this);
+		glfwSetScrollCallback(id, sh);
 	}
 	public void createContext() {
 		glfwMakeContextCurrent(id);
@@ -89,9 +101,17 @@ public class Window {
 			glfwSetWindowShouldClose(id, GL_TRUE);
 		} else {
 			if (action == GLFW_PRESS) {
-				events.add(new Event(key, action));
+				events.add(new Event(key, action, Event.KEYBOARD));
 			}
 		}
+	}
+	public void mouseClick(int button, int action, int mods) {
+		if (action == GLFW_PRESS) {
+			events.add(new Event(button, action, Event.MOUSE_BUTTON));
+		}
+	}
+	public void mouseScroll(double xoffset, double yoffset) {
+		events.add(new Event(xoffset, yoffset));
 	}
 	public boolean shouldClose() {
 		return GLFW.glfwWindowShouldClose(id) == GL_TRUE;

@@ -2,7 +2,10 @@ package com.monolc.fell.world;
 
 public class Tile {
 	public static final int TILE_SIZE = 32;
-	static final boolean[] passable = { true, false };
+	static final boolean[] passable = { true, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+			false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+			false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false,
+			false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false, false };
 	boolean explored;
 	int id;
 	public Tile(int idNum) {

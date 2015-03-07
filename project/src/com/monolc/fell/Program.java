@@ -41,8 +41,10 @@ public class Program {
 		res.getShader("default").bind();
 		res.getShader("default").setUniformi("width", 1600);
 		res.getShader("default").setUniformi("height", 900);
-		Floor floor = new Floor(res.getTexture("tiles"), 120, 100);
+		res.getShader("default").setUniformf("zoom", 1.0f);
+		Floor floor = new Floor(res.getTexture("tiles"), 121, 101);
 		Player plr = new Player(res.getSprite("player"), floor.getOpenLocation());
+		int zoom = 0;
 		while (!w.shouldClose()) {
 			w.update();
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
@@ -58,8 +60,12 @@ public class Program {
 					} else if (e.getKey() == GLFW.GLFW_KEY_D) {
 						plr.moveRight(1);
 					}
+				} else if (e.getType() == Event.MOUSE_SCROLL) {
+					zoom += e.getY();
+					res.getShader("default").setUniformf("zoom", (float)Math.pow(1.4, zoom));
 				}
 			}
+			floor.update();
 			plr.moveCameraTo(res.getShader("default"));
 			floor.draw(res.getShader("default"));
 		}
