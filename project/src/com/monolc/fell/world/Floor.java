@@ -9,10 +9,12 @@ import org.lwjgl.opengl.GL11;
 
 import com.monolc.fell.graphics.VAO;
 import com.monolc.fell.graphics.VBO;
+import com.monolc.fell.resources.ResourceHandler;
 import com.monolc.fell.resources.Shader;
 import com.monolc.fell.resources.Texture;
 
 public class Floor {
+	ResourceHandler rh;
 	Texture texture;
 	VAO vao;
 	VBO vbo;
@@ -20,7 +22,10 @@ public class Floor {
 	Entity[][] entities;
 	int width;
 	int height;
-	public Floor(Texture tex, int w, int h) {
+	int tilenum;
+	public Floor(ResourceHandler res, Texture tex, int w, int h) {
+		tilenum = 0;
+		rh = res;
 		vao = null;
 		vbo = null;
 		texture = tex;
@@ -55,6 +60,12 @@ public class Floor {
 		}
 	}
 	public void draw(Shader s) {
+		s.setUniformf("z", 0.0f);
+		s.setUniformf("x", 0);
+		s.setUniformf("y", 0);
+		texture.bind();
+		vao.bind();
+		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, tilenum * 4 * 6);
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (entities[i][j] != null) {
@@ -62,12 +73,6 @@ public class Floor {
 				}
 			}
 		}
-		s.setUniformf("z", 0.0f);
-		s.setUniformf("x", 0);
-		s.setUniformf("y", 0);
-		texture.bind();
-		vao.bind();
-		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, width * height * 6);
 	}
 	public Location getOpenLocation() {
 		for (int i = 0; i < width; i++) {
@@ -85,7 +90,7 @@ public class Floor {
 		}
 		vao = new VAO();
 		vao.bind();
-		int tilenum = 0;
+		tilenum = 0;
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (tiles[i][j] != null) {
@@ -93,11 +98,11 @@ public class Floor {
 				}
 			}
 		}
-		FloatBuffer vertices = BufferUtils.createFloatBuffer(tilenum * 6 * 7);
+		FloatBuffer vertices = BufferUtils.createFloatBuffer(tilenum * 4 * 6 * 7);
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (tiles[i][j] != null) {
-					addTile(tiles[i][j].getID(), i * Tile.TILE_SIZE, j * Tile.TILE_SIZE, vertices);
+					addTile(tiles[i][j].getID(), i, j, vertices);
 				}
 			}
 		}
@@ -105,12 +110,7 @@ public class Floor {
 		vbo.bind();
 	}
 	private void addTile(int id, int x, int y, FloatBuffer verts) {
-		verts.put(x).put(y).put(1f).put(1f).put(1f).put((id % 10) / 10.0f).put((((int) (id / 10)) + 1) / 10.0f);
-		verts.put(x + Tile.TILE_SIZE).put(y).put(1f).put(1f).put(1f).put(((id % 10) + 1) / 10.0f).put((((int) (id / 10)) + 1) / 10.0f);
-		verts.put(x + Tile.TILE_SIZE).put(y + Tile.TILE_SIZE).put(1f).put(1f).put(1f).put(((id % 10) + 1) / 10.0f).put(((int) (id / 10)) / 10.0f);
-		verts.put(x).put(y).put(1f).put(1f).put(1f).put((id % 10) / 10.0f).put((((int) (id / 10)) + 1) / 10.0f);
-		verts.put(x + Tile.TILE_SIZE).put(y + Tile.TILE_SIZE).put(1f).put(1f).put(1f).put(((id % 10) + 1) / 10.0f).put(((int) (id / 10)) / 10.0f);
-		verts.put(x).put(y + Tile.TILE_SIZE).put(1f).put(1f).put(1f).put((id % 10) / 10.0f).put(((int) (id / 10)) / 10.0f);
+		rh.getTileData(id).addToBuffer(id, x, y, verts, tiles);
 	}
 	private void deleteModel() {
 		if (vao != null) {
@@ -228,81 +228,21 @@ public class Floor {
 		}
 		connect(firstRoomID, rand);
 		prune();
-		int[][] walls = new int[width][height];
+		boolean[][] walls = new boolean[width][height];
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				walls[i][j] = -1;
+				walls[i][j] = false;
 				if (tiles[i][j] != null) {
 					tiles[i][j] = new Tile(0);
 				} else if (nonNullSurrounded(i, j) > 0) {
-					if (aboveNonNull(i, j)) {
-						if (rightNonNull(i, j)) {
-							if (belowNonNull(i, j)) {
-								if (leftNonNull(i, j)) {
-									walls[i][j] = 81;
-								} else {
-									walls[i][j] = 93;
-								}
-							} else {
-								if (leftNonNull(i, j)) {
-									walls[i][j] = 83;
-								} else {
-									walls[i][j] = 72;
-								}
-							}
-						} else {
-							if (belowNonNull(i, j)) {
-								if (leftNonNull(i, j)) {
-									walls[i][j] = 73;
-								} else {
-									walls[i][j] = 84;
-								}
-							} else {
-								if (leftNonNull(i, j)) {
-									walls[i][j] = 70;
-								} else {
-									walls[i][j] = 71;
-								}
-							}
-						}
-					} else {
-						if (rightNonNull(i, j)) {
-							if (belowNonNull(i, j)) {
-								if (leftNonNull(i, j)) {
-									walls[i][j] = 74;
-								} else {
-									walls[i][j] = 92;
-								}
-							} else {
-								if (leftNonNull(i, j)) {
-									walls[i][j] = 94;
-								} else {
-									walls[i][j] = 82;
-								}
-							}
-						} else {
-							if (belowNonNull(i, j)) {
-								if (leftNonNull(i, j)) {
-									walls[i][j] = 90;
-								} else {
-									walls[i][j] = 91;
-								}
-							} else {
-								if (leftNonNull(i, j)) {
-									walls[i][j] = 80;
-								} else {
-									walls[i][j] = -1;
-								}
-							}
-						}
-					}
+					walls[i][j] = true;
 				}
 			}
 		}
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				if (walls[i][j] != -1) {
-					tiles[i][j] = new Tile(walls[i][j]);
+				if (walls[i][j]) {
+					tiles[i][j] = new Tile(1);
 				}
 			}
 		}

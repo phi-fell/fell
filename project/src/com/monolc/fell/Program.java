@@ -42,7 +42,7 @@ public class Program {
 		res.getShader("default").setUniformi("width", 1600);
 		res.getShader("default").setUniformi("height", 900);
 		res.getShader("default").setUniformf("zoom", 1.0f);
-		Floor floor = new Floor(res.getTexture("tiles"), 121, 101);
+		Floor floor = new Floor(res, res.getTexture("tiles"), 121, 101);
 		Player plr = new Player(res.getSprite("player"), floor.getOpenLocation());
 		int zoom = 0;
 		while (!w.shouldClose()) {
@@ -62,7 +62,13 @@ public class Program {
 					}
 				} else if (e.getType() == Event.MOUSE_SCROLL) {
 					zoom += e.getY();
-					res.getShader("default").setUniformf("zoom", (float)Math.pow(1.4, zoom));
+					if (zoom > 7) {
+						zoom = 7;
+					}
+					if (zoom < -2) {
+						zoom = -2;
+					}
+					res.getShader("default").setUniformf("zoom", (float) Math.pow(1.4, zoom));
 				}
 			}
 			floor.update();

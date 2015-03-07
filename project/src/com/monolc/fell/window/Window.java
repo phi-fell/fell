@@ -80,6 +80,9 @@ public class Window {
 		System.out.println("OpenGL V" + GL11.glGetInteger(GL30.GL_MAJOR_VERSION) + "." + GL11.glGetInteger(GL30.GL_MINOR_VERSION) + " Initialized");
 		glEnable(GL11.GL_DEPTH_TEST);
 		glDepthFunc(GL_LEQUAL);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
 	}
 	public int getWidth() {
 		IntBuffer width = IntBuffer.allocate(1);

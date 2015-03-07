@@ -14,5 +14,5 @@ void main() {
     if (lc < 0) {
         lc = 0;
     }
-    fragColor = vec4(vertexColor, 1.0) * textureColor * lc;
+    fragColor = vec4(vertexColor, 1.0) * textureColor;
 }
