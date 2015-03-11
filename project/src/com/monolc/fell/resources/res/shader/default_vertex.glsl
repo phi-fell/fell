@@ -21,5 +21,5 @@ void main() {
     vertexColor = color;
     textureCoord = texcoord;
     gl_Position = vec4(((position + vec2(x,y) - vec2(camx,camy)) / (vec2(width,height) / 2.0)) * zoom, -z, 1.0);
-    posCoord = position + vec2(x,y) - vec2(camx,camy);
+    posCoord = position + vec2(x,y) - vec2(camx, camy);
 }

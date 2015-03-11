@@ -5,6 +5,7 @@
 	<property name="build.dir" location="bin" />
 	<property name="dist.dir" location="dist" />
 	<property name="lib.dir" location="lib" />
+	<property name="exec.dir" location="exec" />
 	<path id="build.classpath">
 		<fileset dir="${lib.dir}">
 			<include name="**/*.jar" />
@@ -24,9 +25,12 @@
 		<copy todir="${build.dir}">
 			<fileset dir="${lib.dir}/unpacked" includes="**" />
 		</copy>
+		<copy todir="${dist.dir}">
+			<fileset dir="${exec.dir}" includes="**" />
+		</copy>
 	</target>
 	<target name="compile" depends="clean, makedir">
-		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true"/>
+		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true" />
 	</target>
 	<target name="jar" depends="compile">
 		<copy todir="${build.dir}/com/monolc/fell/version">
@@ -51,6 +55,7 @@
 	<target name="run" depends="jar">
 		<record name="run.log" action="start" />
 		<java classname="com.monolc.fell.Program" fork="false" classpathref="runtime.path">
+			<arg value="client" />
 		</java>
 		<record name="run.log" action="stop" />
 	</target>
@@ -61,15 +66,21 @@
 		<copy todir="${git.dir}">
 			<fileset file="build.xml" />
 		</copy>
+		<copy todir="${git.dir}">
+			<fileset file="${exec.dir}" />
+		</copy>
+		<copy todir="${git.dir}/exec">
+			<fileset dir="${exec.dir}" includes="**" />
+		</copy>
 		<copy todir="${git.dir}/src">
 			<fileset dir="${src.dir}" includes="**" />
 		</copy>
 	</target>
-	<target name="debug" depends="compile, jar, git, run">
+	<target name="debug" depends="compile, jar, git">
 		<description>builds for debug target</description>
 		<buildnumber file="src/com/monolc/fell/version/buildnumber" />
 	</target>
-	<target name="publish" depends="compile, jar, git, run">
+	<target name="publish" depends="compile, jar, git">
 		<description>builds for publish target</description>
 		<buildnumber file="src/com/monolc/fell/version/buildnumber" />
 	</target>

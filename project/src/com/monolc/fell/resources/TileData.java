@@ -5,6 +5,7 @@ import java.nio.FloatBuffer;
 import com.monolc.fell.world.Tile;
 
 public class TileData {
+	static final int TILE_SHEET_SIZE = 20;
 	int nID, oID, vID, hID, iID;
 	public TileData(int none, int outer, int vert, int hor, int inner) {
 		nID = none;
@@ -26,11 +27,11 @@ public class TileData {
 	private void addQuarter(float ax, float ay, int id, int xmod, int ymod, FloatBuffer verts) {
 		int x = (int) ((ax + xmod / 2.0) * Tile.TILE_SIZE);
 		int y = (int) ((ay + (1 - ymod) / 2.0) * Tile.TILE_SIZE);
-		float tx = (id % 10) / 10.0f;
-		float ty = (id / 10) / 10.0f;
-		tx += xmod / 20.0f;
-		ty += ymod / 20.0f;
-		float tmod = 1.0f / 20.0f;
+		float tx = (id % TILE_SHEET_SIZE) / ((float)TILE_SHEET_SIZE);
+		float ty = (id / TILE_SHEET_SIZE) / ((float)TILE_SHEET_SIZE);
+		tx += xmod / (TILE_SHEET_SIZE * 2f);
+		ty += ymod / (TILE_SHEET_SIZE * 2f);
+		float tmod = 1.0f / (TILE_SHEET_SIZE * 2f);
 		verts.put(x).put(y).put(1f).put(1f).put(1f).put(tx).put(ty + tmod);
 		verts.put(x + Tile.TILE_SIZE / 2).put(y).put(1f).put(1f).put(1f).put(tx + tmod).put(ty + tmod);
 		verts.put(x + Tile.TILE_SIZE / 2).put(y + Tile.TILE_SIZE / 2).put(1f).put(1f).put(1f).put(tx + tmod).put(ty);
