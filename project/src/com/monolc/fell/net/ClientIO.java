@@ -6,8 +6,10 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import com.monolc.fell.version.VersionData;
+
 public class ClientIO {
-	public ClientIO() {
+	public ClientIO(VersionData v) {
 		Socket socket = null;
 		try {
 			socket = new Socket("localhost", 53476);
@@ -22,7 +24,7 @@ public class ClientIO {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		out.println("I don't know.  Stop it, even worse.  Why do you do this to me?");
+		out.println(v.getVersion());
 		try {
 			System.out.println(in.readLine());
 		} catch (Exception e) {

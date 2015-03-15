@@ -32,7 +32,8 @@ public class Client {
 		version = v;
 	}
 	public void initialize() {
-		ClientIO cio = new ClientIO();
+		System.out.println("Client running...");
+		ClientIO cio = new ClientIO(version);
 		System.out.println("LWJGL V" + Sys.getVersion());
 		resources = new ResourceHandler();
 		errorCallback = Callbacks.errorCallbackPrint(System.err);
@@ -41,7 +42,7 @@ public class Client {
 			throw new IllegalStateException("Unable to initialize GLFW");
 		}
 		int GLMajor = 4;
-		int GLMinor = 1;
+		int GLMinor = 0;
 		window = new Window(800, 600, "Fell " + version.getStage() + " V" + version.getVersion() + ", Build#" + version.getBuild() + " OpenGL V" + GLMajor + "." + GLMinor, GLMajor, GLMinor);
 		window.setPosition(10, 30);
 		resources.getShader("default").bind();

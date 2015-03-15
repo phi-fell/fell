@@ -13,6 +13,23 @@ public class ConnectionHandler implements Runnable {
 		clients = new ArrayList<Client>();
 		socket = s;
 	}
+	public Client getClient() {
+		if (!clientsAvailable()) {
+			return null;
+		}
+		Client c = null;
+		synchronized (this) {
+			c = clients.remove(0);
+		}
+		return c;
+	}
+	public boolean clientsAvailable() {
+		boolean ret = false;
+		synchronized (this) {
+			ret = clients.size() > 0;
+		}
+		return ret;
+	}
 	public void start() {
 		t = new Thread(this, "Server Connection Handler");
 		t.start();
@@ -21,7 +38,10 @@ public class ConnectionHandler implements Runnable {
 		boolean cont = true;
 		while (cont) {
 			try {
-				clients.add(new Client(socket.accept()));
+				Client next = new Client(socket.accept());
+				synchronized (this) {
+					clients.add(next);
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

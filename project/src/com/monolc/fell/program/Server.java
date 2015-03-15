@@ -9,8 +9,8 @@ public class Server {
 		version = v;
 	}
 	public void run() {
-		System.out.println("Server running: " + version.getStage() + " V" + version.getVersion() + ", Build#" + version.getBuild());
-		ServerIO sio = new ServerIO();
-		sio.run();
+		System.out.println("Server running...");
+		ServerIO sio = new ServerIO(version);
+		sio.start();
 	}
 }

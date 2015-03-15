@@ -1,22 +1,8 @@
 package com.monolc.fell;
 
-import static org.lwjgl.glfw.GLFW.glfwInit;
-import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
-import static org.lwjgl.glfw.GLFW.glfwTerminate;
-
-import org.lwjgl.Sys;
-import org.lwjgl.glfw.Callbacks;
-import org.lwjgl.glfw.GLFW;
-import org.lwjgl.glfw.GLFWErrorCallback;
-import org.lwjgl.opengl.GL11;
-
 import com.monolc.fell.program.Client;
 import com.monolc.fell.program.Server;
-import com.monolc.fell.resources.ResourceHandler;
-import com.monolc.fell.version.*;
-import com.monolc.fell.window.*;
-import com.monolc.fell.world.Floor;
-import com.monolc.fell.world.Player;
+import com.monolc.fell.version.VersionData;
 
 public class Program {
 	public static void main(String args[]) {
