@@ -13,11 +13,11 @@ public class ClientIO {
 	PrintWriter out;
 	BufferedReader in;
 	String recieved;
-	public ClientIO(VersionData v) {
+	public ClientIO(VersionData v, String server) {
 		recieved = "";
 		socket = null;
 		try {
-			socket = new Socket("localhost", 53476);
+			socket = new Socket(server, 53476);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -18,10 +18,24 @@ public class ServerIO implements Runnable {
 	ArrayList<Client> clients;
 	VersionData version;
 	Floor floor;
+	boolean exit;
 	public ServerIO(VersionData v) {
+		exit = false;
 		clients = new ArrayList<Client>();
 		version = v;
 		t = null;
+	}
+	public void exitGracefully() {
+		synchronized (this) {
+			exit = true;
+		}
+	}
+	public boolean shouldExit() {
+		boolean ret = false;
+		synchronized (this) {
+			ret = exit;
+		}
+		return ret;
 	}
 	public void start() {
 		if (t == null) {
@@ -32,13 +46,13 @@ public class ServerIO implements Runnable {
 	public void run() {
 		try {
 			socket = new ServerSocket(53476);
+			socket.setSoTimeout(100);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		connector = new ConnectionHandler(socket);
 		connector.start();
-		boolean cont = true;
-		while (cont) {
+		while (!shouldExit()) {
 			while (connector.clientsAvailable()) {
 				synchronized (clients) {
 					clients.add(connector.getClient());
@@ -68,6 +82,7 @@ public class ServerIO implements Runnable {
 				}
 			}
 		}
+		connector.exitGracefully();
 	}
 	public void sendAll(String s) {
 		synchronized (clients) {

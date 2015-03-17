@@ -91,6 +91,7 @@ public class FMLTag {
 				ret.remove(i);
 				i--;
 			} else if (!ret.get(i).contains(":")) {
+				System.out.println("|" + ret.get(i) + "| was invalid");
 				ret.remove(i);
 				i--;
 				invalid++;

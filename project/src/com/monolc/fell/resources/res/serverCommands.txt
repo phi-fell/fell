@@ -1,0 +1,4 @@
+Commands:
+    "help": displays command list
+    "altf4": immediate quit of server. DATA WILL BE LOST!
+    "exit": closes the server gracefully, saving all data and cleaning up.

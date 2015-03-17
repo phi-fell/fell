@@ -4,6 +4,10 @@ import static org.lwjgl.glfw.GLFW.glfwInit;
 import static org.lwjgl.glfw.GLFW.glfwSetErrorCallback;
 import static org.lwjgl.glfw.GLFW.glfwTerminate;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+
 import org.lwjgl.Sys;
 import org.lwjgl.glfw.Callbacks;
 import org.lwjgl.glfw.GLFW;
@@ -33,8 +37,16 @@ public class Client {
 		version = v;
 	}
 	public void initialize() {
-		System.out.println("Client running...");
-		ClientIO cio = new ClientIO(version);
+		System.out.println("Initializing Client...");
+		BufferedReader console = new BufferedReader(new InputStreamReader(System.in));
+		System.out.print("Server location: ");
+		String line = null;
+		try {
+			line = console.readLine();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		ClientIO cio = new ClientIO(version, line);
 		System.out.println("LWJGL V" + Sys.getVersion());
 		resources = new ResourceHandler();
 		errorCallback = Callbacks.errorCallbackPrint(System.err);
@@ -45,7 +57,7 @@ public class Client {
 		int GLMajor = 4;
 		int GLMinor = 0;
 		window = new Window(800, 600, "Fell " + version.getStage() + " V" + version.getVersion() + ", Build#" + version.getBuild() + " OpenGL V" + GLMajor + "." + GLMinor, GLMajor, GLMinor);
-		window.setPosition(10, 30);
+		// window.setPosition(10, 30);
 		resources.getShader("default").bind();
 		resources.getShader("default").setUniformi("width", 800);
 		resources.getShader("default").setUniformi("height", 600);
