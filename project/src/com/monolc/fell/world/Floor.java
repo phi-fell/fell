@@ -1,5 +1,6 @@
 package com.monolc.fell.world;
 
+import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Random;
@@ -9,6 +10,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.monolc.fell.graphics.VAO;
 import com.monolc.fell.graphics.VBO;
+import com.monolc.fell.resources.FMLTag;
 import com.monolc.fell.resources.ResourceHandler;
 import com.monolc.fell.resources.Shader;
 import com.monolc.fell.resources.Texture;
@@ -23,6 +25,25 @@ public class Floor {
 	int width;
 	int height;
 	int tilenum;
+	public Floor(ResourceHandler res, Texture tex, FMLTag data) {
+		tilenum = 0;
+		rh = res;
+		vao = null;
+		vbo = null;
+		texture = tex;
+		width = data.getTag("width").getValueAsInt();
+		height = data.getTag("height").getValueAsInt();
+		tiles = new Tile[width][height];
+		entities = new Entity[width][height];
+		FMLTag tiles = data.getTag("tiles");
+		for (int i = 0; i < width; i++) {
+			// String
+			// TODO
+			for (int j = 0; j < height; j++) {
+			}
+		}
+		generateModel();
+	}
 	public Floor(ResourceHandler res, Texture tex, int w, int h) {
 		tilenum = 0;
 		rh = res;
@@ -45,6 +66,13 @@ public class Floor {
 			}
 		}
 		generateModel();
+	}
+	public String toString() {
+		return toString(0);
+	}
+	public String toString(int indent) {
+		// TODO
+		return null;
 	}
 	public Entity getEntity(int x, int y) {
 		return entities[x][y];

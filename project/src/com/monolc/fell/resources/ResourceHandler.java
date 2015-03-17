@@ -18,12 +18,13 @@ public class ResourceHandler {
 	Map<String, Texture> textures;
 	Map<String, Sprite> sprites;
 	Map<String, TileData> tiledatas;
-	Map<String, FMLFile> menus;
+	Map<String, FMLTag> menus;
 	public ResourceHandler() {
 		shaders = new HashMap<String, Shader>();
 		textures = new HashMap<String, Texture>();
 		sprites = new HashMap<String, Sprite>();
 		tiledatas = new HashMap<String, TileData>();
+		menus = new HashMap<String, FMLTag>();
 	}
 	public String load(String name) {
 		String ret = "";
@@ -64,7 +65,7 @@ public class ResourceHandler {
 		}
 		return tiledatas.get(id + "");
 	}
-	public FMLFile getMenu(String name) {
+	public FMLTag getMenu(String name) {
 		if (menus.get(name) == null) {
 			menus.put(name, loadMenu(name));
 		}
@@ -107,7 +108,7 @@ public class ResourceHandler {
 		return new TileData(Integer.parseInt(getValue(tileFile, "noneID")), Integer.parseInt(getValue(tileFile, "outerID")), Integer.parseInt(getValue(tileFile, "verticalID")),
 				Integer.parseInt(getValue(tileFile, "horizontalID")), Integer.parseInt(getValue(tileFile, "innerID")));
 	}
-	private FMLFile loadMenu(String name) {
-		return new FMLFile(load("res/ui/" + name + ".fml"));
+	private FMLTag loadMenu(String name) {
+		return new FMLTag(load("res/ui/" + name + ".fml"));
 	}
 }

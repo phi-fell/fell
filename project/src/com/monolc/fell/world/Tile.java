@@ -12,6 +12,13 @@ public class Tile {
 		id = idNum;
 		explored = false;
 	}
+	public Tile(String data) {
+		id = Integer.parseInt(data.substring(0, data.indexOf("|")));
+		explored = data.substring(data.indexOf("|") + 1).equals("t");
+	}
+	public String toString() {
+		return id + "|" + (explored ? "t" : "f");
+	}
 	public int getID() {
 		return id;
 	}

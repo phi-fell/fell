@@ -1,7 +1,6 @@
 Menu:
 	Image: title
-		width: 400
-		height: 200
-		x: align-center
-		y: 150
-	
+ 		width: 400
+ 		height: 200
+ 		x: align-center
+ 		y: 150
