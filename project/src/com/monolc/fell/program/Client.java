@@ -11,6 +11,7 @@ import org.lwjgl.glfw.GLFWErrorCallback;
 import org.lwjgl.opengl.GL11;
 
 import com.monolc.fell.net.ClientIO;
+import com.monolc.fell.resources.FMLTag;
 import com.monolc.fell.resources.ResourceHandler;
 import com.monolc.fell.version.VersionData;
 import com.monolc.fell.window.Event;
@@ -49,7 +50,9 @@ public class Client {
 		resources.getShader("default").setUniformi("width", 800);
 		resources.getShader("default").setUniformi("height", 600);
 		resources.getShader("default").setUniformf("zoom", 1.0f);
-		currentFloor = new Floor(resources, resources.getTexture("tiles"), 121, 101);
+		while (!cio.hasMessage()) {
+		}
+		currentFloor = new Floor(resources, resources.getTexture("tiles"), (new FMLTag(cio.recieve().replace(';', '\n'))).getTag("floor"));
 		plr = new Player(resources.getSprite("player"), currentFloor.getOpenLocation());
 		zoom = 0;
 		startTime = window.getSecondsSinceInitialization();

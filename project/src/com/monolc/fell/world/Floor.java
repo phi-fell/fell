@@ -33,16 +33,39 @@ public class Floor {
 		texture = tex;
 		width = data.getTag("width").getValueAsInt();
 		height = data.getTag("height").getValueAsInt();
+		System.out.println("w/h: " + width + "/" + height);
 		tiles = new Tile[width][height];
 		entities = new Entity[width][height];
-		FMLTag tiles = data.getTag("tiles");
 		for (int i = 0; i < width; i++) {
-			// String
-			// TODO
+			System.out.println("parsing column " + i);
+			String column = data.getTag("col" + i).getValue();
 			for (int j = 0; j < height; j++) {
+				tiles[i][j] = column.substring(0, column.indexOf(',')).equals("n") ? null : new Tile(column.substring(0, column.indexOf(',')));
+				column = column.substring(column.indexOf(',') + 1);
 			}
 		}
 		generateModel();
+	}
+	public Floor(ResourceHandler res, int w, int h) {
+		tilenum = 0;
+		rh = res;
+		vao = null;
+		vbo = null;
+		width = w;
+		height = h;
+		tiles = new Tile[width][height];
+		Random rand = new Random();
+		generate(rand);
+		entities = new Entity[width][height];
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				if (tiles[i][j] != null && tiles[i][j].isPassable() && rand.nextInt(100) == 3) {
+					entities[i][j] = new Entity(new Location(this, i, j), Entity.GOBLIN);
+				} else {
+					entities[i][j] = null;
+				}
+			}
+		}
 	}
 	public Floor(ResourceHandler res, Texture tex, int w, int h) {
 		tilenum = 0;
@@ -71,8 +94,25 @@ public class Floor {
 		return toString(0);
 	}
 	public String toString(int indent) {
-		// TODO
-		return null;
+		String ind = "";
+		for (int i = 0; i < indent; i++) {
+			ind += "\t";
+		}
+		String ret = ind + "floor:\n";
+		ret += ind + "\twidth: " + width + "\n";
+		ret += ind + "\theight: " + height + "\n";
+		for (int i = 0; i < width; i++) {
+			ret += ind + "\tcol" + i + ": ";
+			for (int j = 0; j < height; j++) {
+				if (tiles[i][j] == null) {
+					ret += "n,";
+				} else {
+					ret += tiles[i][j].toString() + ",";
+				}
+			}
+			ret += "\n";
+		}
+		return ret;
 	}
 	public Entity getEntity(int x, int y) {
 		return entities[x][y];

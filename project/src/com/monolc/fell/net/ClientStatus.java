@@ -13,11 +13,17 @@ public class ClientStatus {
 		needsMap = true;
 		version = "";
 	}
+	public void setHasMap(boolean b){
+		needsMap = !b;
+	}
 	public void setInitialState(String header) {
 		version = header;
 	}
 	public boolean hasRecievedInitialData() {
 		return recievedHeader;
+	}
+	public boolean hasMap() {
+		return !needsMap;
 	}
 	public boolean isValid() {
 		return getValidityMessage() == null;

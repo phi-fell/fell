@@ -19,6 +19,14 @@ public class Entity {
 		posY = loc.getY();
 		inMove = false;
 	}
+	public Entity(Location loc, int t) {
+		type = t;
+		location = loc;
+		location.getFloor().setEntity(location.getX(), location.getY(), this);
+		posX = loc.getX();
+		posY = loc.getY();
+		inMove = false;
+	}
 	int getType() {
 		return type;
 	}

@@ -49,7 +49,7 @@ public class Client {
 		return socket.getInetAddress() + "";
 	}
 	public void send(String message) {
-		out.println(message);
+		out.println(message.replace('\n', ';'));
 	}
 	public boolean messageAvailable() {
 		try {

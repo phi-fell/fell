@@ -9,15 +9,20 @@ import java.net.Socket;
 import com.monolc.fell.version.VersionData;
 
 public class ClientIO {
+	Socket socket;
+	PrintWriter out;
+	BufferedReader in;
+	String recieved;
 	public ClientIO(VersionData v) {
-		Socket socket = null;
+		recieved = "";
+		socket = null;
 		try {
 			socket = new Socket("localhost", 53476);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		PrintWriter out = null;
-		BufferedReader in = null;
+		out = null;
+		in = null;
 		try {
 			out = new PrintWriter(socket.getOutputStream(), true);
 			in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -25,10 +30,28 @@ public class ClientIO {
 			e.printStackTrace();
 		}
 		out.println(v.getVersion());
+	}
+	public void send(String s) {
+		out.println(s);
+	}
+	public boolean hasMessage() {
 		try {
-			System.out.println(in.readLine());
-		} catch (Exception e) {
+			while (in.ready()) {
+				int val = in.read();
+				if (val != -1) {
+					recieved += (char) val;
+				} else {
+					break;
+				}
+			}
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return recieved.contains("\n");
+	}
+	public String recieve() {
+		String ret = recieved.substring(0, recieved.indexOf("\n"));
+		recieved = recieved.substring(recieved.indexOf("\n") + 1);
+		return ret;
 	}
 }
