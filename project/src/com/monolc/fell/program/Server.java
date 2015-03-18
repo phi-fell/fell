@@ -49,6 +49,6 @@ public class Server {
 			}
 			System.out.println();
 		}
-		// end
+		// end console IO
 	}
 }

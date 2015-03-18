@@ -93,7 +93,7 @@ public class Client {
 					} else if (e.getKey() == GLFW.GLFW_KEY_D) {
 						plr.moveRight();
 					}
-					server.send("plrloc:\n\tx:" + plr.getLocation().getX() + "\n\ty:" + plr.getLocation().getX() + "\n");
+					server.send("action:\n\tmove:up");
 				} else if (e.getType() == Event.MOUSE_SCROLL) {
 					zoom += e.getY();
 					if (zoom > 7) {
