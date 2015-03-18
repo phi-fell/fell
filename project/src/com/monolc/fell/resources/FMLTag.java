@@ -23,6 +23,17 @@ public class FMLTag {
 		}
 		return null;
 	}
+	public FMLTag removeTag(String name) {
+		for (int i = 0; i < tags.size(); i++) {
+			if (tags.get(i).id.equals(name)) {
+				return tags.remove(i);
+			}
+		}
+		return null;
+	}
+	public void addTag(FMLTag tag) {
+		tags.add(tag);
+	}
 	public String getValue() {
 		return value;
 	}

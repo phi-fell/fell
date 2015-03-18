@@ -25,6 +25,7 @@ import com.monolc.fell.world.Player;
 
 public class Client {
 	ResourceHandler resources;
+	ClientIO server;
 	GLFWErrorCallback errorCallback;
 	Floor currentFloor;
 	Window window;
@@ -46,7 +47,7 @@ public class Client {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		ClientIO cio = new ClientIO(version, line);
+		server = new ClientIO(version, line);
 		System.out.println("LWJGL V" + Sys.getVersion());
 		resources = new ResourceHandler();
 		errorCallback = Callbacks.errorCallbackPrint(System.err);
@@ -62,9 +63,9 @@ public class Client {
 		resources.getShader("default").setUniformi("width", 800);
 		resources.getShader("default").setUniformi("height", 600);
 		resources.getShader("default").setUniformf("zoom", 1.0f);
-		while (!cio.hasMessage()) {
+		while (!server.hasMessage()) {
 		}
-		currentFloor = new Floor(resources, resources.getTexture("tiles"), (new FMLTag(cio.recieve().replace(';', '\n'))).getTag("floor"));
+		currentFloor = new Floor(resources, resources.getTexture("tiles"), (new FMLTag(server.recieve().replace(';', '\n'))).getTag("floor"));
 		plr = new Player(resources.getSprite("player"), currentFloor.getOpenLocation());
 		zoom = 0;
 		startTime = window.getSecondsSinceInitialization();
@@ -92,6 +93,7 @@ public class Client {
 					} else if (e.getKey() == GLFW.GLFW_KEY_D) {
 						plr.moveRight();
 					}
+					server.send("plrloc:\n\tx:" + plr.getLocation().getX() + "\n\ty:" + plr.getLocation().getX() + "\n");
 				} else if (e.getType() == Event.MOUSE_SCROLL) {
 					zoom += e.getY();
 					if (zoom > 7) {

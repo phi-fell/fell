@@ -9,12 +9,14 @@ import com.monolc.fell.graphics.VAO;
 import com.monolc.fell.graphics.VBO;
 
 public class Sprite {
+	String name;
 	Texture texture;
 	VAO vao;
 	VBO vbo;
 	int width;
 	int height;
-	public Sprite(Texture tex, int w, int h) {
+	public Sprite(String id, Texture tex, int w, int h) {
+		name = id;
 		texture = tex;
 		width = w;
 		height = h;
@@ -30,9 +32,15 @@ public class Sprite {
 		vbo = new VBO(vertices);
 		vbo.bind();
 	}
+	public Sprite(String id) {
+		name = id;
+	}
 	public void draw() {
 		texture.bind();
 		vao.bind();
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, 6);
+	}
+	public String getName() {
+		return name;
 	}
 }

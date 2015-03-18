@@ -101,7 +101,7 @@ public class ResourceHandler {
 	}
 	private Sprite loadSprite(String name) {
 		String spriteFile = load("res/sprite/" + name + ".spt");
-		return new Sprite(getTexture(getValue(spriteFile, "texture")), Integer.parseInt(getValue(spriteFile, "width")), Integer.parseInt(getValue(spriteFile, "height")));
+		return new Sprite(name, getTexture(getValue(spriteFile, "texture")), Integer.parseInt(getValue(spriteFile, "width")), Integer.parseInt(getValue(spriteFile, "height")));
 	}
 	private TileData loadTileData(int id) {
 		String tileFile = load("res/tile/" + id + ".til");

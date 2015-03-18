@@ -1,5 +1,7 @@
 package com.monolc.fell.world;
 
+import com.monolc.fell.resources.FMLTag;
+import com.monolc.fell.resources.ResourceHandler;
 import com.monolc.fell.resources.Shader;
 import com.monolc.fell.resources.Sprite;
 
@@ -19,13 +21,36 @@ public class Entity {
 		posY = loc.getY();
 		inMove = false;
 	}
-	public Entity(Location loc, int t) {
+	public Entity(String spriteID, Location loc, int t) {
 		type = t;
 		location = loc;
+		sprite = new Sprite(spriteID);
 		location.getFloor().setEntity(location.getX(), location.getY(), this);
 		posX = loc.getX();
 		posY = loc.getY();
 		inMove = false;
+	}
+	public Entity(ResourceHandler res, FMLTag data, Floor f) {
+		type = data.getValueAsInt();
+		location = new Location(data.getTag("loc"), f);
+		sprite = res.getSprite(data.getTag("sprite").getValue());
+		location.getFloor().setEntity(location.getX(), location.getY(), this);
+		posX = location.getX();
+		posY = location.getY();
+		inMove = false;
+	}
+	public String toString() {
+		return toString(0);
+	}
+	public String toString(int indent) {
+		String ind = "";
+		for (int i = 0; i < indent; i++) {
+			ind += "\t";
+		}
+		String ret = ind + "entity: " + type + "\n";
+		ret += ind + "\tsprite: " + sprite.getName() + "\n";
+		ret += location.toString(indent + 1);
+		return ret;
 	}
 	int getType() {
 		return type;

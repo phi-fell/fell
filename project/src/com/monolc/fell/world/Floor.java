@@ -44,6 +44,9 @@ public class Floor {
 				column = column.substring(column.indexOf(',') + 1);
 			}
 		}
+		while (data.getTag("entity") != null) {
+			new Entity(rh, data.removeTag("entity"), this);
+		}
 		generateModel();
 	}
 	public Floor(ResourceHandler res, int w, int h) {
@@ -60,7 +63,7 @@ public class Floor {
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
 				if (tiles[i][j] != null && tiles[i][j].isPassable() && rand.nextInt(100) == 3) {
-					entities[i][j] = new Entity(new Location(this, i, j), Entity.GOBLIN);
+					entities[i][j] = new Entity("goblin", new Location(this, i, j), Entity.GOBLIN);
 				} else {
 					entities[i][j] = null;
 				}
@@ -111,6 +114,13 @@ public class Floor {
 				}
 			}
 			ret += "\n";
+		}
+		for (int i = 0; i < width; i++) {
+			for (int j = 0; j < height; j++) {
+				if (entities[i][j] != null) {
+					ret += entities[i][j].toString(indent + 1);
+				}
+			}
 		}
 		return ret;
 	}

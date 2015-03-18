@@ -1,5 +1,7 @@
 package com.monolc.fell.world;
 
+import com.monolc.fell.resources.FMLTag;
+
 public class Location {
 	private int x, y;
 	Floor floor;
@@ -12,6 +14,24 @@ public class Location {
 		floor = l.getFloor();
 		x = l.getX();
 		y = l.getY();
+	}
+	public Location(FMLTag data, Floor f) {
+		floor = f;
+		x = data.getTag("x").getValueAsInt();
+		y = data.getTag("y").getValueAsInt();
+	}
+	public String toString() {
+		return toString(0);
+	}
+	public String toString(int indent) {
+		String ind = "";
+		for (int i = 0; i < indent; i++) {
+			ind += "\t";
+		}
+		String ret = ind + "loc:\n";
+		ret += ind + "\tx: " + x + "\n";
+		ret += ind + "\ty: " + y + "\n";
+		return ret;
 	}
 	public void clear() {
 		floor.setEntity(x, y, null);
