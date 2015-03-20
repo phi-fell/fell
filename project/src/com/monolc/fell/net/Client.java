@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
+import com.monolc.fell.world.Entity;
+
 public class Client {
 	long lastMessage;
 	Socket socket;
@@ -13,7 +15,9 @@ public class Client {
 	BufferedReader in;
 	String recieved;
 	ClientStatus status;
+	Entity controlled;
 	public Client(Socket s) {
+		controlled = null;
 		in = null;
 		out = null;
 		socket = s;
@@ -31,8 +35,8 @@ public class Client {
 		return getDisconnectMessage() == null;
 	}
 	public String getDisconnectMessage() {
-		if (System.currentTimeMillis() - lastMessage > 5000) {
-			return "Inactive for 5 seconds";
+		if (System.currentTimeMillis() - lastMessage > 60000) {
+			return "Inactive for 60 seconds";
 		}
 		return null;
 	}
@@ -47,6 +51,9 @@ public class Client {
 	}
 	public String toString() {
 		return socket.getInetAddress() + "";
+	}
+	public void sendTurnUpdate() {
+		// TODO
 	}
 	public void send(String message) {
 		out.println(message.replace('\n', ';'));
@@ -70,7 +77,7 @@ public class Client {
 		String ret = recieved.substring(0, recieved.indexOf("\n"));
 		recieved = recieved.substring(recieved.indexOf("\n") + 1);
 		lastMessage = System.currentTimeMillis();
-		return ret;
+		return ret.replace(';', '\n');
 	}
 	public ClientStatus getStatus() {
 		return status;

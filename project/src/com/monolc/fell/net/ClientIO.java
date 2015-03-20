@@ -32,7 +32,7 @@ public class ClientIO {
 		out.println(v.getVersion());
 	}
 	public void send(String s) {
-		out.println(s);
+		out.println(s.replace('\n', ';'));
 	}
 	public boolean hasMessage() {
 		try {
@@ -52,6 +52,6 @@ public class ClientIO {
 	public String recieve() {
 		String ret = recieved.substring(0, recieved.indexOf("\n"));
 		recieved = recieved.substring(recieved.indexOf("\n") + 1);
-		return ret;
+		return ret.replace(';', '\n');
 	}
 }

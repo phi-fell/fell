@@ -63,7 +63,10 @@ public class ServerIO implements Runnable {
 			synchronized (clients) {
 				for (int i = 0; i < clients.size(); i++) {
 					if (!clients.get(i).getStatus().hasRecievedInitialData() && clients.get(i).messageAvailable()) {
-						clients.get(i).getStatus().setInitialState(clients.get(i).recieve());
+						String rec = clients.get(i).recieve();
+						if (rec != null) {
+							clients.get(i).getStatus().setInitialState(rec);
+						}
 					}
 					if (clients.get(i).getStatus().hasRecievedInitialData() && !clients.get(i).getStatus().isValid()) {
 						System.out.println("Client #" + i + " : " + clients.get(i).toString() + " was disconnected. Reason given: " + clients.get(i).getStatus().getValidityMessage());
@@ -78,6 +81,9 @@ public class ServerIO implements Runnable {
 					} else if (!clients.get(i).getStatus().hasMap()) {
 						clients.get(i).send(floor.toString());
 						clients.get(i).getStatus().setHasMap(true);
+					}
+					if (clients.get(i).messageAvailable()) {
+						clients.get(i).recieve();
 					}
 				}
 			}

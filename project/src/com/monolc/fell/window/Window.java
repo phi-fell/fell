@@ -100,12 +100,8 @@ public class Window {
 		GLFW.glfwSetWindowPos(id, x, y);
 	}
 	public void keyPress(int key, int scancode, int action, int mods) {
-		if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
-			glfwSetWindowShouldClose(id, GL_TRUE);
-		} else {
-			if (action == GLFW_PRESS || action == GLFW_RELEASE || action == GLFW_REPEAT) {
-				events.add(new Event(key, action, Event.KEYBOARD));
-			}
+		if (action == GLFW_PRESS || action == GLFW_RELEASE || action == GLFW_REPEAT) {
+			events.add(new Event(key, action, Event.KEYBOARD));
 		}
 	}
 	public void mouseClick(int button, int action, int mods) {
@@ -124,7 +120,10 @@ public class Window {
 		glfwPollEvents();
 	}
 	public void destroy() {
+		glfwSetWindowShouldClose(id, GL_TRUE);
 		glfwDestroyWindow(id);
 		kh.release();
+		mh.release();
+		sh.release();
 	}
 }

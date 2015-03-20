@@ -48,6 +48,13 @@ public class Client {
 			e.printStackTrace();
 		}
 		server = new ClientIO(version, line);
+		while (!server.hasMessage()) {
+		}
+		if (server.recieve().equals("acknowledged")) {
+			System.out.println("Connected to server.");
+		} else {
+			System.out.println("Unknown Connection Error!");
+		}
 		System.out.println("LWJGL V" + Sys.getVersion());
 		resources = new ResourceHandler();
 		errorCallback = Callbacks.errorCallbackPrint(System.err);
@@ -65,7 +72,7 @@ public class Client {
 		resources.getShader("default").setUniformf("zoom", 1.0f);
 		while (!server.hasMessage()) {
 		}
-		currentFloor = new Floor(resources, resources.getTexture("tiles"), (new FMLTag(server.recieve().replace(';', '\n'))).getTag("floor"));
+		currentFloor = new Floor(resources, resources.getTexture("tiles"), (new FMLTag(server.recieve())).getTag("floor"));
 		plr = new Player(resources.getSprite("player"), currentFloor.getOpenLocation());
 		zoom = 0;
 		startTime = window.getSecondsSinceInitialization();
@@ -84,7 +91,10 @@ public class Client {
 			while (window.eventsToQuery()) {
 				Event e = window.queryEvent();
 				if (e.getType() == Event.KEY_PRESS || e.getType() == Event.KEY_REPEAT) {
-					if (e.getKey() == GLFW.GLFW_KEY_W) {
+					if (e.getKey() == GLFW.GLFW_KEY_ESCAPE) {
+						window.destroy();
+						//return;
+					} else if (e.getKey() == GLFW.GLFW_KEY_W) {
 						plr.moveUp();
 					} else if (e.getKey() == GLFW.GLFW_KEY_A) {
 						plr.moveLeft();

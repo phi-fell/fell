@@ -53,6 +53,7 @@ public class ConnectionHandler implements Runnable {
 		while (!shouldExit()) {
 			try {
 				Client next = new Client(socket.accept());
+				next.send("acknowledged");
 				synchronized (this) {
 					clients.add(next);
 				}
