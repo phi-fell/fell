@@ -2,7 +2,9 @@
 <project name="Fell" default="debug" basedir=".">
 	<property name="git.dir" location="C:/github/fell/project" />
 	<property name="src.dir" location="src" />
+	<property name="launchsrc.dir" location="../Fell Launcher/src" />
 	<property name="build.dir" location="bin" />
+	<property name="launchbuild.dir" location="lbin" />
 	<property name="dist.dir" location="dist" />
 	<property name="lib.dir" location="lib" />
 	<property name="exec.dir" location="exec" />
@@ -17,10 +19,12 @@
 	</path>
 	<target name="clean">
 		<delete dir="${build.dir}" />
+		<delete dir="${launchbuild.dir}" />
 		<delete dir="${dist.dir}" />
 	</target>
 	<target name="makedir">
 		<mkdir dir="${build.dir}" />
+		<mkdir dir="${launchbuild.dir}" />
 		<mkdir dir="${dist.dir}" />
 		<copy todir="${build.dir}">
 			<fileset dir="${lib.dir}/unpacked" includes="**" />
@@ -31,6 +35,7 @@
 	</target>
 	<target name="compile" depends="clean, makedir">
 		<javac srcdir="${src.dir}" destdir="${build.dir}" classpathref="build.classpath" includeantruntime="false" debug="true" />
+		<javac srcdir="${launchsrc.dir}" destdir="${launchbuild.dir}" includeantruntime="false" debug="true" />
 	</target>
 	<target name="jar" depends="compile">
 		<copy todir="${build.dir}/com/monolc/fell/version">
@@ -48,6 +53,11 @@
 				<attribute name="Main-Class" value="com.monolc.fell.Program" />
 			</manifest>
 		</jar>
+		<jar destfile="${dist.dir}\launcher.jar" basedir="${launchbuild.dir}">
+			<manifest>
+				<attribute name="Main-Class" value="com.monolc.fell.launcher.Program" />
+			</manifest>
+		</jar>
 		<copy todir="${dist.dir}">
 			<fileset file="${lib.dir}/lwjgl.dll" />
 		</copy>
@@ -63,6 +73,7 @@
 		<delete dir="${git.dir}" />
 		<mkdir dir="${git.dir}" />
 		<mkdir dir="${git.dir}/src" />
+		<mkdir dir="${git.dir}/launcher src" />
 		<copy todir="${git.dir}">
 			<fileset file="build.xml" />
 		</copy>
@@ -74,6 +85,9 @@
 		</copy>
 		<copy todir="${git.dir}/src">
 			<fileset dir="${src.dir}" includes="**" />
+		</copy>
+		<copy todir="${git.dir}/launcher src">
+			<fileset dir="${launchsrc.dir}" includes="**" />
 		</copy>
 	</target>
 	<target name="debug" depends="compile, jar, git">
